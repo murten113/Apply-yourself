@@ -252,11 +252,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 338683069}
-  - {fileID: 1924256719}
-  - {fileID: 1451822395}
   - {fileID: 2000530251}
   - {fileID: 1906643240}
   - {fileID: 314191528}
+  - {fileID: 1924256719}
+  - {fileID: 1451822395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 221001039}
   - component: {fileID: 221001038}
   - component: {fileID: 221001037}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: WaterCan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 274080972}
   - component: {fileID: 274080974}
   - component: {fileID: 274080973}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +545,7 @@ GameObject:
   - component: {fileID: 276609493}
   - component: {fileID: 276609494}
   - component: {fileID: 276609492}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -559,9 +559,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276609490}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -838,7 +838,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 388511790}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: PlantTypes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -852,7 +852,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388511789}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -879,7 +879,7 @@ GameObject:
   - component: {fileID: 448332594}
   - component: {fileID: 448332595}
   - component: {fileID: 448332593}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,9 +893,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 448332591}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -1019,7 +1019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isUnlocked: 1
-  hasDeadPlant: 1
+  hasDeadPlant: 0
   currentPlant: {fileID: 0}
   availablePlantTypes: []
   plotRenderer: {fileID: 448332594}
@@ -1040,7 +1040,7 @@ GameObject:
   - component: {fileID: 855176180}
   - component: {fileID: 855176181}
   - component: {fileID: 855176179}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1054,9 +1054,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855176177}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -1201,7 +1201,7 @@ GameObject:
   - component: {fileID: 983862093}
   - component: {fileID: 983862092}
   - component: {fileID: 983862091}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Shovel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1334,7 +1334,7 @@ GameObject:
   - component: {fileID: 1039745241}
   - component: {fileID: 1039745242}
   - component: {fileID: 1039745240}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1348,9 +1348,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1039745238}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -1708,7 +1708,7 @@ GameObject:
   - component: {fileID: 1335655837}
   - component: {fileID: 1335655836}
   - component: {fileID: 1335655835}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SeedRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1722,7 +1722,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335655833}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1731,7 +1731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -329.2, y: -150.31}
+  m_AnchoredPosition: {x: -329.2, y: -150.30998}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1335655835
@@ -1916,7 +1916,7 @@ GameObject:
   - component: {fileID: 1413573366}
   - component: {fileID: 1413573367}
   - component: {fileID: 1413573365}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1930,9 +1930,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413573363}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -2074,7 +2074,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1451822395}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Interaction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2117,7 +2117,7 @@ GameObject:
   - component: {fileID: 1478364592}
   - component: {fileID: 1478364591}
   - component: {fileID: 1478364590}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SeedYellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2131,7 +2131,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478364588}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2140,7 +2140,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -223.9, y: -150.31}
+  m_AnchoredPosition: {x: -223.9, y: -150.30998}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1478364590
@@ -2465,7 +2465,7 @@ GameObject:
   - component: {fileID: 1679087099}
   - component: {fileID: 1679087098}
   - component: {fileID: 1679087097}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SeedPurple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2479,7 +2479,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679087095}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2488,7 +2488,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -117.8, y: -150.31}
+  m_AnchoredPosition: {x: -117.8, y: -150.30998}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1679087097
@@ -2597,7 +2597,7 @@ GameObject:
   - component: {fileID: 1685698983}
   - component: {fileID: 1685698985}
   - component: {fileID: 1685698984}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2845,7 +2845,7 @@ GameObject:
   - component: {fileID: 1831928242}
   - component: {fileID: 1831928243}
   - component: {fileID: 1831928241}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2859,9 +2859,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831928239}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.83, y: 48.83, z: 48.83}
+  m_LocalScale: {x: 48.83001, y: 48.83001, z: 48.83001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1924256719}
@@ -3218,7 +3218,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1924256719}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Plots
   m_TagString: Untagged
   m_Icon: {fileID: 0}

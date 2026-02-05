@@ -26,11 +26,32 @@ public class GardenPlot : MonoBehaviour
         UpdateVisual();
         
         // Ensure we have a collider
-        if (GetComponent<Collider2D>() == null)
+        Collider2D col = GetComponent<Collider2D>();
+        if (col == null)
         {
             Debug.LogWarning($"{gameObject.name} is missing a Collider2D! Adding BoxCollider2D...");
-            BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
-            col.size = new Vector2(1f, 1f); // Default size
+            col = gameObject.AddComponent<BoxCollider2D>();
+            BoxCollider2D boxCol = col as BoxCollider2D;
+            if (boxCol != null)
+            {
+                boxCol.size = new Vector2(1f, 1f); // Default size
+            }
+        }
+        
+        // Debug collider info
+        if (col != null)
+        {
+            Debug.Log($"{gameObject.name} - Collider: {col.GetType().Name}, Layer: {gameObject.layer} ({LayerMask.LayerToName(gameObject.layer)}), Enabled: {col.enabled}, IsTrigger: {col.isTrigger}");
+            
+            // Warn if on wrong layer or disabled
+            if (!col.enabled)
+            {
+                Debug.LogWarning($"{gameObject.name} collider is DISABLED!");
+            }
+            if (col.isTrigger)
+            {
+                Debug.LogWarning($"{gameObject.name} collider is set as TRIGGER - this might prevent detection!");
+            }
         }
     }
     

@@ -117,21 +117,32 @@ public class GameManager : MonoBehaviour
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             
-            // Use OverlapPoint which is more reliable for 2D
-            Collider2D hitCollider = Physics2D.OverlapPoint(mousePos);
+            // Use ContactFilter2D to check ALL layers
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.NoFilter(); // Check all layers
             
-            if (hitCollider != null)
+            Collider2D[] results = new Collider2D[10];
+            int count = Physics2D.OverlapPoint(mousePos, filter, results);
+            
+            if (count > 0)
             {
-                GardenPlot plot = hitCollider.GetComponent<GardenPlot>();
-                if (plot != null)
+                Debug.Log($"Found {count} collider(s) at position {mousePos}");
+                for (int i = 0; i < count; i++)
                 {
-                    Debug.Log($"Clicked on plot: {plot.name}");
-                    UseToolOnPlot(plot);
+                    Debug.Log($"  Collider {i}: {results[i].name} on layer {results[i].gameObject.layer}");
+                    GardenPlot plot = results[i].GetComponent<GardenPlot>();
+                    if (plot != null)
+                    {
+                        Debug.Log($"Clicked on plot: {plot.name}");
+                        UseToolOnPlot(plot);
+                        return; // Found plot, exit
+                    }
                 }
             }
             else
             {
-                Debug.Log($"No collider at mouse position: {mousePos}");
+                Debug.LogWarning($"No collider at mouse position: {mousePos}. Camera Z: {mainCamera.transform.position.z}");
+                Debug.LogWarning($"Screen position: {Input.mousePosition}, World position: {mousePos}");
             }
         }
     }
