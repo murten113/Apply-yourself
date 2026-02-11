@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f1e71d34d05654284934824e96a186, type: 3}
+  m_Name: Purple
+  m_EditorClassIdentifier: 
+  displayName: Flower P
+  flowerColor: {r: 0.52208346, g: 0.015686274, b: 1, a: 1}
+  growthSpeed: 2
+  pointIncome: 6
+  maintenanceRate: 0.5
+  waterCapacity: 0.7
