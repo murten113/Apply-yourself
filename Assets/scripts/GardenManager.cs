@@ -33,6 +33,7 @@ public class GardenManager : MonoBehaviour
     // Public accessors for UI/other systems
     public int Score => score;
     public float GameTimer => gameTimer;
+    public PlantType[] AvailablePlantTypes => availablePlantTypes;
     public float GameDuration => gameDurationSeconds;
     public IReadOnlyList<Plant> Plants => plants;
 

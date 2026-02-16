@@ -908,7 +908,7 @@ MonoBehaviour:
   - {fileID: 2083322341}
   treeController: {fileID: 2072627670}
   plantVisualScale: 0.3
-  debugWatering: 1
+  debugWatering: 0
   minGrowthHeight: 0.3
   deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
   needsWaterDarken: 0.5

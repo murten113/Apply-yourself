@@ -29,7 +29,12 @@ public class GameUI : MonoBehaviour
     private void Update()
     {
         if (toolText != null && playerTools != null)
-            toolText.text = $"Tool: {GetToolDisplayName(playerTools.CurrentTool)}";
+        {
+            string toolName = GetToolDisplayName(playerTools.CurrentTool);
+            if (playerTools.CurrentTool == ToolType.SeedPacket && playerTools.SelectedSeedType != null)
+                toolName += $" ({playerTools.SelectedSeedType.displayName})";
+            toolText.text = $"Tool: {toolName}";
+        }
 
         if (scoreText != null && gardenManager != null)
             scoreText.text = $"Score: {gardenManager.Score}";
@@ -65,7 +70,7 @@ public class GameUI : MonoBehaviour
         toolRect.anchorMax = new Vector2(0, 1);
         toolRect.pivot = new Vector2(0, 1);
         toolRect.anchoredPosition = new Vector2(20, -20);
-        toolRect.sizeDelta = new Vector2(200, 40);
+        toolRect.sizeDelta = new Vector2(400, 40);
 
         GameObject scoreObj = new GameObject("ScoreText");
         scoreObj.transform.SetParent(transform, false);

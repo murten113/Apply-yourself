@@ -25,15 +25,57 @@ public class PlayerTools : MonoBehaviour
     [Header("References")]
     [SerializeField] private GardenManager gardenManager;
     [SerializeField] private Camera playerCamera;
-    [SerializeField] private PlantType selectedSeedType; // Which seed to plant when using SeedPacket
+    [SerializeField] private PlantType selectedSeedType; // Fallback if no GardenManager; otherwise synced from AvailablePlantTypes
+
+    private int selectedSeedIndex;
 
     public ToolType CurrentTool => currentTool;
+    public PlantType SelectedSeedType => selectedSeedType;
+
+    private void Start()
+    {
+        SyncSeedSelectionFromManager();
+    }
+
+    private void SyncSeedSelectionFromManager()
+    {
+        if (gardenManager == null || gardenManager.AvailablePlantTypes == null || gardenManager.AvailablePlantTypes.Length == 0)
+            return;
+
+        var types = gardenManager.AvailablePlantTypes;
+        for (int i = 0; i < types.Length; i++)
+        {
+            if (types[i] == selectedSeedType)
+            {
+                selectedSeedIndex = i;
+                return;
+            }
+        }
+        selectedSeedIndex = 0;
+        selectedSeedType = types[0];
+    }
 
     private void Update()
-    { 
+    {
         if (Input.GetKeyDown(KeyCode.Alpha1)) currentTool = ToolType.Shovel;
         if (Input.GetKeyDown(KeyCode.Alpha2)) currentTool = ToolType.SeedPacket;
         if (Input.GetKeyDown(KeyCode.Alpha3)) currentTool = ToolType.WateringCan;
+
+        if (currentTool == ToolType.SeedPacket && gardenManager != null && gardenManager.AvailablePlantTypes != null && gardenManager.AvailablePlantTypes.Length > 1)
+        {
+            float scroll = Input.mouseScrollDelta.y;
+            if (scroll > 0)
+            {
+                selectedSeedIndex = (selectedSeedIndex + 1) % gardenManager.AvailablePlantTypes.Length;
+                selectedSeedType = gardenManager.AvailablePlantTypes[selectedSeedIndex];
+            }
+            else if (scroll < 0)
+            {
+                selectedSeedIndex--;
+                if (selectedSeedIndex < 0) selectedSeedIndex = gardenManager.AvailablePlantTypes.Length - 1;
+                selectedSeedType = gardenManager.AvailablePlantTypes[selectedSeedIndex];
+            }
+        }
 
         if (Input.GetMouseButtonDown(0))
             TryUseTool();
