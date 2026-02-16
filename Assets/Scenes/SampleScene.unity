@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 290342784}
   - component: {fileID: 290342787}
   m_Layer: 0
-  m_Name: plot7
+  m_Name: plot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,6 +242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 0
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &326610185
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +813,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 1
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +894,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDurationSeconds: 180
-  maturePlantsNeededToUnlockPlot: 3
   availablePlantTypes:
   - {fileID: 11400000, guid: 2d5acec87820d844eabe1d8175f412fa, type: 2}
   - {fileID: 11400000, guid: 9dbe59d737537e448bd746127805c6b6, type: 2}
@@ -900,9 +903,9 @@ MonoBehaviour:
   - {fileID: 867694994}
   - {fileID: 1013405110}
   - {fileID: 1609665675}
-  - {fileID: 2083322341}
-  - {fileID: 1644024905}
   - {fileID: 290342787}
+  - {fileID: 1644024905}
+  - {fileID: 2083322341}
   treeController: {fileID: 2072627670}
   plantVisualScale: 0.3
   debugWatering: 1
@@ -1047,6 +1050,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 1
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &1013405105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1175,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 1
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &1089426698
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1408,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 0
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &1644024900
 GameObject:
   m_ObjectHideFlags: 0
@@ -1524,6 +1533,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 0
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!1 &1788427495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,9 +1569,9 @@ Transform:
   - {fileID: 867694990}
   - {fileID: 1013405106}
   - {fileID: 1609665671}
-  - {fileID: 2083322337}
-  - {fileID: 1644024901}
   - {fileID: 290342783}
+  - {fileID: 1644024901}
+  - {fileID: 2083322337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1899115640
@@ -1812,7 +1823,7 @@ GameObject:
   - component: {fileID: 2083322338}
   - component: {fileID: 2083322341}
   m_Layer: 0
-  m_Name: plot5
+  m_Name: plot7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1921,6 +1932,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUnlocked: 0
   hasDeadPlant: 1
+  deadPlantScale: 0.25
+  deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
 --- !u!114 &2085162804
 MonoBehaviour:
   m_ObjectHideFlags: 0

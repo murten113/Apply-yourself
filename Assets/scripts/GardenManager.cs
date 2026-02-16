@@ -9,7 +9,6 @@ public class GardenManager : MonoBehaviour
 {
     [Header("Game Settings")]
     [SerializeField] private float gameDurationSeconds = 180f;
-    [SerializeField] private int maturePlantsNeededToUnlockPlot = 3;
 
     [Header("References")]
     [SerializeField] private PlantType[] availablePlantTypes;
@@ -26,8 +25,10 @@ public class GardenManager : MonoBehaviour
     // Runtime state
     private List<Plant> plants = new List<Plant>();
     private int score;
+    private float scoreAccumulator;  // Fractional points carried between frames
     private float gameTimer;
-    private int unlockedPlotCount = 1; // Start with 1 plot available
+    private int unlockedPlotCount;
+    private int initiallyUnlockedCount;
 
     // Public accessors for UI/other systems
     public int Score => score;
@@ -38,6 +39,16 @@ public class GardenManager : MonoBehaviour
     private void Start()
     {
         gameTimer = gameDurationSeconds;
+
+        // Sync unlockedPlotCount with plots that are already unlocked in the scene
+        initiallyUnlockedCount = plots.Count(p => p.IsUnlocked);
+        unlockedPlotCount = initiallyUnlockedCount;
+
+        if (FindObjectOfType<GameUI>() == null)
+        {
+            GameObject uiObj = new GameObject("GameUI");
+            uiObj.AddComponent<GameUI>();
+        }
     }
 
     private void Update()
@@ -85,7 +96,7 @@ public class GardenManager : MonoBehaviour
                     break;
 
                 case PlantStage.Mature:
-                    score += Mathf.RoundToInt(p.type.pointIncome * Time.deltaTime);
+                    scoreAccumulator += p.type.pointIncome * Time.deltaTime;
                     p.waterLevel -= p.type.maintenanceRate * Time.deltaTime;
                     if (p.waterLevel <= 0f)
                     {
@@ -100,13 +111,18 @@ public class GardenManager : MonoBehaviour
             }
             UpdatePlantVisual(p);
         }
+
+        // Convert accumulated fractional points to whole score (avoids losing points when rounding per-frame)
+        int wholePoints = Mathf.FloorToInt(scoreAccumulator);
+        score += wholePoints;
+        scoreAccumulator -= wholePoints;
     }
 
     private void CheckPlotUnlock()
     {
         int matureCount = plants.Count(p => p.stage == PlantStage.Mature);
-        int required = maturePlantsNeededToUnlockPlot * unlockedPlotCount;
-        if (matureCount >= required && unlockedPlotCount < plots.Length)
+        // Unlock next plot when mature count reaches current unlocked count (3 mature → plot 4, 4 mature → plot 5, etc.)
+        if (matureCount >= unlockedPlotCount && unlockedPlotCount < plots.Length)
         {
             unlockedPlotCount++;
             plots[unlockedPlotCount - 1].Unlock();

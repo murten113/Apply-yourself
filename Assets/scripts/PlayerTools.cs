@@ -27,6 +27,8 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private PlantType selectedSeedType; // Which seed to plant when using SeedPacket
 
+    public ToolType CurrentTool => currentTool;
+
     private void Update()
     { 
         if (Input.GetKeyDown(KeyCode.Alpha1)) currentTool = ToolType.Shovel;

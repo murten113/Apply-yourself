@@ -15,6 +15,6 @@ MonoBehaviour:
   displayName: Flower G
   flowerColor: {r: 0.015686274, g: 1, b: 0.17233054, a: 1}
   growthSpeed: 0.5
-  pointIncome: 3
-  maintenanceRate: 0.1
+  pointIncome: 8
+  maintenanceRate: 0.05
   waterCapacity: 1.2
