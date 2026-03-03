@@ -331,88 +331,289 @@ public class GardenManager : MonoBehaviour
 
     /// <summary>
     /// Creates plant visual at a specific position (for planting without plots).
+    /// Uses model prefab if assigned, otherwise uses cube system.
     /// </summary>
     private void CreatePlantVisualAtPosition(Plant plant, Vector3 position)
     {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.name = $"{plant.type.displayName} Plant";
-        float initialHeight = plantVisualScale * minGrowthHeight;
-        cube.transform.localScale = new Vector3(plantVisualScale, initialHeight, plantVisualScale);
-        cube.transform.position = position + Vector3.up * (initialHeight * 0.5f);
-
-        Renderer renderer = cube.GetComponent<Renderer>();
-        if (renderer != null)
+        GameObject modelPrefab = GetModelPrefabForStage(plant.type, plant.stage);
+        
+        if (modelPrefab != null)
         {
-            renderer.material.color = plant.type.flowerColor;
+            // Use the assigned model
+            GameObject model = Instantiate(modelPrefab, position, Quaternion.identity);
+            model.name = $"{plant.type.displayName} Plant ({plant.stage})";
+            
+            // Store initial scale for growth animation
+            plant.initialModelScale = model.transform.localScale;
+            plant.usesModel = true;
+            plant.currentModelStage = plant.stage;
+            
+            // Start at small size (seed stage)
+            float initialHeight = minGrowthHeight;
+            model.transform.localScale = plant.initialModelScale * initialHeight;
+            
+            plant.visualTransform = model.transform;
         }
+        else
+        {
+            // Fallback to cube system
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.name = $"{plant.type.displayName} Plant";
+            float initialHeight = plantVisualScale * minGrowthHeight;
+            cube.transform.localScale = new Vector3(plantVisualScale, initialHeight, plantVisualScale);
+            cube.transform.position = position + Vector3.up * (initialHeight * 0.5f);
 
-        plant.visualTransform = cube.transform;
+            Renderer renderer = cube.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.color = plant.type.flowerColor;
+            }
+
+            plant.visualTransform = cube.transform;
+            plant.usesModel = false; // Using cube system
+        }
     }
 
     /// <summary>
-    /// Creates a simple colored cube at the plant's position as visual feedback.
-    /// Parents under the plot so GetComponentInParent finds the plot when clicking the plant.
+    /// Creates a plant visual at the plant's position.
+    /// Uses model prefab if assigned, otherwise uses cube system.
     /// </summary>
     private void CreatePlantVisual(Plant plant, GardenPlot plot)
     {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.name = $"{plant.type.displayName} Plant";
-        float initialHeight = plantVisualScale * minGrowthHeight;
-        cube.transform.localScale = new Vector3(plantVisualScale, initialHeight, plantVisualScale);
-        cube.transform.position = plant.worldPosition + Vector3.up * (initialHeight * 0.5f);
-
-        // Don't parent under plot - plot has scale (2,0.5,2) which would flatten the plant
-
-        Renderer renderer = cube.GetComponent<Renderer>();
-        if (renderer != null)
+        GameObject modelPrefab = GetModelPrefabForStage(plant.type, plant.stage);
+        
+        if (modelPrefab != null)
         {
-            renderer.material.color = plant.type.flowerColor;
+            // Use the assigned model for current stage
+            GameObject model = Instantiate(modelPrefab, plant.worldPosition, Quaternion.identity);
+            model.name = $"{plant.type.displayName} Plant ({plant.stage})";
+            
+            // Store initial scale for growth animation
+            plant.initialModelScale = model.transform.localScale;
+            plant.usesModel = true;
+            plant.currentModelStage = plant.stage;
+            
+            // Start at small size (seed stage)
+            float initialHeight = minGrowthHeight;
+            model.transform.localScale = plant.initialModelScale * initialHeight;
+            
+            plant.visualTransform = model.transform;
         }
+        else
+        {
+            // Fallback to cube system
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.name = $"{plant.type.displayName} Plant";
+            float initialHeight = plantVisualScale * minGrowthHeight;
+            cube.transform.localScale = new Vector3(plantVisualScale, initialHeight, plantVisualScale);
+            cube.transform.position = plant.worldPosition + Vector3.up * (initialHeight * 0.5f);
 
-        plant.visualTransform = cube.transform;
+            Renderer renderer = cube.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.color = plant.type.flowerColor;
+            }
+
+            plant.visualTransform = cube.transform;
+            plant.usesModel = false; // Using cube system
+        }
+    }
+    
+    /// <summary>
+    /// Gets the appropriate model prefab for a given plant stage.
+    /// </summary>
+    private GameObject GetModelPrefabForStage(PlantType plantType, PlantStage stage)
+    {
+        if (plantType == null) return null;
+        
+        // If using single model system (legacy)
+        if (plantType.useSingleModel && plantType.plantModelPrefab != null)
+        {
+            return plantType.plantModelPrefab;
+        }
+        
+        // Stage-based model system
+        switch (stage)
+        {
+            case PlantStage.Seed:
+                return plantType.sproutModelPrefab;
+                
+            case PlantStage.Growing:
+                // Growing stage uses sprout (will swap to middle when it reaches 50%)
+                return plantType.sproutModelPrefab;
+                
+            case PlantStage.NeedsWater:
+                // Use middle stage model when needs water
+                return plantType.middleStageModelPrefab != null ? plantType.middleStageModelPrefab : plantType.sproutModelPrefab;
+                
+            case PlantStage.Mature:
+                // Use mature model when fully grown
+                return plantType.matureModelPrefab != null ? plantType.matureModelPrefab : 
+                       (plantType.middleStageModelPrefab != null ? plantType.middleStageModelPrefab : plantType.sproutModelPrefab);
+                
+            case PlantStage.Dead:
+                // Dead plants can use mature model (or you could add a dead model)
+                return plantType.matureModelPrefab != null ? plantType.matureModelPrefab : 
+                       (plantType.middleStageModelPrefab != null ? plantType.middleStageModelPrefab : plantType.sproutModelPrefab);
+                
+            default:
+                return plantType.sproutModelPrefab;
+        }
+    }
+    
+    /// <summary>
+    /// Swaps the plant model when stage changes.
+    /// </summary>
+    private void SwapPlantModel(Plant plant)
+    {
+        if (!plant.usesModel || plant.visualTransform == null) return;
+        
+        // Determine which model should be used for current stage
+        PlantStage targetModelStage;
+        GameObject newModelPrefab = null;
+        
+        // Determine model based on stage and growth progress
+        if (plant.stage == PlantStage.Seed || (plant.stage == PlantStage.Growing && plant.growthProgress < 0.5f))
+        {
+            // Early stages: use sprout
+            targetModelStage = PlantStage.Seed;
+            newModelPrefab = plant.type.sproutModelPrefab;
+        }
+        else if (plant.stage == PlantStage.NeedsWater || (plant.stage == PlantStage.Growing && plant.growthProgress >= 0.5f))
+        {
+            // Middle stage: use middle stage model
+            targetModelStage = PlantStage.NeedsWater;
+            newModelPrefab = plant.type.middleStageModelPrefab;
+            // Fallback to sprout if middle stage model not assigned
+            if (newModelPrefab == null)
+            {
+                newModelPrefab = plant.type.sproutModelPrefab;
+            }
+        }
+        else if (plant.stage == PlantStage.Mature)
+        {
+            // Mature stage: use mature model
+            targetModelStage = PlantStage.Mature;
+            newModelPrefab = plant.type.matureModelPrefab;
+            // Fallback to middle stage or sprout if mature model not assigned
+            if (newModelPrefab == null)
+            {
+                newModelPrefab = plant.type.middleStageModelPrefab != null ? plant.type.middleStageModelPrefab : plant.type.sproutModelPrefab;
+            }
+        }
+        else
+        {
+            // Dead or other stages
+            targetModelStage = plant.stage;
+            newModelPrefab = GetModelPrefabForStage(plant.type, plant.stage);
+        }
+        
+        if (newModelPrefab == null) return;
+        
+        // Only swap if the model stage has changed
+        if (plant.currentModelStage == targetModelStage) return;
+        
+        // Store position before destroying old model
+        Vector3 position = plant.visualTransform.position;
+        
+        // Destroy old model
+        Destroy(plant.visualTransform.gameObject);
+        
+        // Create new model
+        GameObject newModel = Instantiate(newModelPrefab, position, Quaternion.identity);
+        newModel.name = $"{plant.type.displayName} Plant ({plant.stage})";
+        
+        // Preserve scale based on growth
+        plant.initialModelScale = newModel.transform.localScale;
+        float heightFactor = Mathf.Lerp(minGrowthHeight, 1f, plant.growthProgress);
+        newModel.transform.localScale = plant.initialModelScale * heightFactor;
+        
+        plant.visualTransform = newModel.transform;
+        plant.currentModelStage = targetModelStage;
     }
 
     /// <summary>
-    /// Updates the plant cube's color and scale based on stage and growth.
+    /// Updates the plant visual's color and scale based on stage and growth.
+    /// Works with both model prefabs and cube system.
+    /// Handles model swapping when stage changes.
     /// </summary>
     private void UpdatePlantVisual(Plant plant)
     {
         if (plant.visualTransform == null) return;
 
-        Transform t = plant.visualTransform;
-        Renderer renderer = t.GetComponent<Renderer>();
-        if (renderer == null) return;
+        // Check if we need to swap models (for stage-based model system)
+        if (plant.usesModel && !plant.type.useSingleModel)
+        {
+            SwapPlantModel(plant);
+        }
 
-        // Color based on stage
-        Color displayColor;
-        if (plant.stage == PlantStage.Dead)
+        Transform t = plant.visualTransform;
+        if (t == null) return; // Model might have been swapped
+
+        if (plant.usesModel)
         {
-            displayColor = deadPlantColor;
-        }
-        else if (plant.stage == PlantStage.NeedsWater)
-        {
-            displayColor = Color.Lerp(plant.type.flowerColor, Color.black, needsWaterDarken);
-        }
-        else if (plant.stage == PlantStage.Mature && plant.waterLevel < 0.5f)
-        {
-            // Mature plant low on water - darken as water depletes (0.5 = full color, 0 = darkest)
-            float darkenAmount = (1f - plant.waterLevel * 2f) * needsWaterDarken;  // 0-0.5 water -> 0 to 0.5 darken
-            displayColor = Color.Lerp(plant.type.flowerColor, Color.black, darkenAmount);
+            // Handle model prefab scaling
+            float heightFactor = Mathf.Lerp(minGrowthHeight, 1f, plant.growthProgress);
+            t.localScale = plant.initialModelScale * heightFactor;
+            
+            // Position model at ground level
+            t.position = plant.worldPosition;
+            
+            // Apply color tint to model (if it has renderers)
+            Color displayColor = GetPlantDisplayColor(plant);
+            Renderer[] allRenderers = t.GetComponentsInChildren<Renderer>();
+            foreach (var r in allRenderers)
+            {
+                if (r != null && r.material != null)
+                {
+                    r.material.color = displayColor;
+                }
+            }
         }
         else
         {
-            displayColor = plant.type.flowerColor;
+            // Handle cube system (original behavior)
+            Renderer renderer = t.GetComponent<Renderer>();
+            if (renderer == null) return;
+
+            // Color based on stage
+            Color displayColor = GetPlantDisplayColor(plant);
+            renderer.material.color = displayColor;
+
+            // Y-axis growth: scale height based on growthProgress (0 to 1)
+            float heightFactor = Mathf.Lerp(minGrowthHeight, 1f, plant.growthProgress);
+            float baseScale = plantVisualScale;
+            float yScale = baseScale * heightFactor;
+            t.localScale = new Vector3(baseScale, yScale, baseScale);
+
+            // Keep bottom of cube on the ground
+            t.position = plant.worldPosition + Vector3.up * (yScale * 0.5f);
         }
-        renderer.material.color = displayColor;
+    }
 
-        // Y-axis growth: scale height based on growthProgress (0 to 1)
-        float heightFactor = Mathf.Lerp(minGrowthHeight, 1f, plant.growthProgress);
-        float baseScale = plantVisualScale;
-        float yScale = baseScale * heightFactor;
-        t.localScale = new Vector3(baseScale, yScale, baseScale);
-
-        // Keep bottom of cube on the ground
-        t.position = plant.worldPosition + Vector3.up * (yScale * 0.5f);
+    /// <summary>
+    /// Gets the display color for a plant based on its stage and water level.
+    /// </summary>
+    private Color GetPlantDisplayColor(Plant plant)
+    {
+        if (plant.stage == PlantStage.Dead)
+        {
+            return deadPlantColor;
+        }
+        else if (plant.stage == PlantStage.NeedsWater)
+        {
+            return Color.Lerp(plant.type.flowerColor, Color.black, needsWaterDarken);
+        }
+        else if (plant.stage == PlantStage.Mature && plant.waterLevel < 0.5f)
+        {
+            // Mature plant low on water - darken as water depletes
+            float darkenAmount = (1f - plant.waterLevel * 2f) * needsWaterDarken;
+            return Color.Lerp(plant.type.flowerColor, Color.black, darkenAmount);
+        }
+        else
+        {
+            return plant.type.flowerColor;
+        }
     }
 
     /// <summary>

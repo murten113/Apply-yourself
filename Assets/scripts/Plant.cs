@@ -23,6 +23,9 @@ public class Plant
     public float waterLevel;
     public Vector3 worldPosition;
     public Transform visualTransform;
+    public Vector3 initialModelScale; // Stores the original scale of the model (for growth animation)
+    public bool usesModel; // True if using a model prefab, false if using cube system
+    public PlantStage currentModelStage; // Tracks which stage model is currently displayed
 
     public Plant(PlantType plantType, Vector3 position)
     {
@@ -32,5 +35,8 @@ public class Plant
         waterLevel = 1f;
         worldPosition = position;
         visualTransform = null;
+        initialModelScale = Vector3.one;
+        usesModel = false;
+        currentModelStage = PlantStage.Seed; // Track which model stage we're showing
     }
 }
