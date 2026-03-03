@@ -41,9 +41,18 @@ public class GardenManager : MonoBehaviour
     {
         gameTimer = gameDurationSeconds;
 
-        // Sync unlockedPlotCount with plots that are already unlocked in the scene
-        initiallyUnlockedCount = plots.Count(p => p.IsUnlocked);
-        unlockedPlotCount = initiallyUnlockedCount;
+        // Unlock all plots at start (no unlocking system)
+        if (plots != null)
+        {
+            foreach (var plot in plots)
+            {
+                if (plot != null && !plot.IsUnlocked)
+                {
+                    plot.Unlock();
+                }
+            }
+            unlockedPlotCount = plots.Length; // All plots unlocked
+        }
 
         if (FindObjectOfType<GameUI>() == null)
         {
@@ -58,7 +67,6 @@ public class GardenManager : MonoBehaviour
         if (gameTimer <= 0f) gameTimer = 0f;
 
         UpdateAllPlants();
-        CheckPlotUnlock();
         if (treeController != null)
             treeController.UpdateTreeScale(score);
     }
@@ -117,17 +125,6 @@ public class GardenManager : MonoBehaviour
         int wholePoints = Mathf.FloorToInt(scoreAccumulator);
         score += wholePoints;
         scoreAccumulator -= wholePoints;
-    }
-
-    private void CheckPlotUnlock()
-    {
-        int matureCount = plants.Count(p => p.stage == PlantStage.Mature);
-        // Unlock next plot when mature count reaches current unlocked count (3 mature → plot 4, 4 mature → plot 5, etc.)
-        if (matureCount >= unlockedPlotCount && unlockedPlotCount < plots.Length)
-        {
-            unlockedPlotCount++;
-            plots[unlockedPlotCount - 1].Unlock();
-        }
     }
 
     /// <summary>
@@ -262,29 +259,94 @@ public class GardenManager : MonoBehaviour
 
     /// <summary>
     /// Try to plant a new seed. Uses raycast hit for reliable plot detection.
+    /// Now allows multiple plants per plot and plants at the exact hit position.
     /// </summary>
     public bool TryPlantSeed(RaycastHit hit, PlantType plantType)
     {
         if (plantType == null) return false;
 
         // Try collider-based lookup first, then fall back to position-based
-        // (handles cases where the hit collider isn't on the plot hierarchy, e.g. shared ground plane)
         GardenPlot plot = hit.collider.GetComponentInParent<GardenPlot>();
         if (plot == null)
             plot = GetPlotAtPosition(hit.point);
 
-        if (plot == null || !plot.IsUnlocked || plot.HasDeadPlant)
+        // Only check if plot exists - remove unlock and dead plant checks
+        if (plot == null)
             return false;
 
-        // Prevent multiple plants per plot
-        if (FindPlantInPlot(plot) != null)
-            return false;
+        // REMOVED: Prevent multiple plants per plot - now allows unlimited plants
+        // if (FindPlantInPlot(plot) != null)
+        //     return false;
 
-        Vector3 plantPosition = plot.PlantPosition;
+        // Use the exact hit point instead of plot.PlantPosition
+        // This allows planting anywhere on the plot
+        Vector3 plantPosition = hit.point;
+
+        // Ensure plant is slightly above the surface
+        plantPosition.y += 0.1f; // Adjust this value based on your needs
+
         Plant plant = new Plant(plantType, plantPosition);
         CreatePlantVisual(plant, plot);
         plants.Add(plant);
         return true;
+    }
+
+    /// <summary>
+    /// Plant a seed at a specific world position (uses PublicRaycast position).
+    /// Allows multiple plants per plot and plants anywhere on the plot.
+    /// </summary>
+    public bool TryPlantSeedAtPosition(Vector3 worldPosition, PlantType plantType)
+    {
+        if (plantType == null) return false;
+
+        // Find plot at the position (optional - allows planting even without plots)
+        GardenPlot plot = GetPlotAtPosition(worldPosition);
+
+        // If plot exists, make sure it's unlocked (but allow planting without plot)
+        if (plot != null && !plot.IsUnlocked)
+        {
+            return false; // Plot is locked, don't plant
+        }
+
+        // Use the exact position provided
+        Vector3 plantPosition = worldPosition;
+        plantPosition.y += 0.1f; // Slightly above surface
+
+        Plant plant = new Plant(plantType, plantPosition);
+
+        // Create visual - use plot if available, otherwise create standalone
+        if (plot != null)
+        {
+            CreatePlantVisual(plant, plot);
+        }
+        else
+        {
+            // Create visual without plot (allows planting anywhere)
+            CreatePlantVisualAtPosition(plant, plantPosition);
+        }
+
+        plants.Add(plant);
+        return true;
+    }
+
+    /// <summary>
+    /// Creates plant visual at a specific position (for planting without plots).
+    /// </summary>
+    private void CreatePlantVisualAtPosition(Plant plant, Vector3 position)
+    {
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.name = $"{plant.type.displayName} Plant";
+        float initialHeight = plantVisualScale * minGrowthHeight;
+        cube.transform.localScale = new Vector3(plantVisualScale, initialHeight, plantVisualScale);
+        cube.transform.position = position + Vector3.up * (initialHeight * 0.5f);
+
+        Renderer renderer = cube.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = plant.type.flowerColor;
+        }
+
+        plant.visualTransform = cube.transform;
     }
 
     /// <summary>
@@ -395,9 +457,12 @@ public class GardenManager : MonoBehaviour
 
     private GardenPlot GetPlotAtPosition(Vector3 worldPosition)
     {
+        if (plots == null || plots.Length == 0) return null;
+        
         float range = 2.5f;  // Generous range for plots with scale 2x2
         foreach (var plot in plots)
         {
+            if (plot == null) continue;
             if (Vector3.Distance(plot.PlantPosition, worldPosition) <= range)
                 return plot;
         }

@@ -23,6 +23,7 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private LayerMask interactLayer; // Optional: limit what we can hit
 
     [Header("References")]
+    [SerializeField] private PublicRaycast publicRaycast; // for looking at plants
     [SerializeField] private GardenManager gardenManager;
     [SerializeField] private Camera playerCamera;
     [SerializeField] private PlantType selectedSeedType; // Fallback if no GardenManager; otherwise synced from AvailablePlantTypes
@@ -83,42 +84,36 @@ public class PlayerTools : MonoBehaviour
 
     private void TryUseTool()
     {
-        if (gardenManager == null || playerCamera == null) return;
+        if (gardenManager == null || publicRaycast == null) return;
 
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        RaycastHit[] hits = Physics.RaycastAll(ray, interactRange);
+        // Use PublicRaycast instead of doing our own raycast
+        bool isLookingAtSomething = publicRaycast.IsLookingAtSomething();
+        Vector3 lookPosition = publicRaycast.GetLookedAtPositionOrMaxDistance();
 
         switch (currentTool)
         {
-            case ToolType.WateringCan:
-                // Watering uses "look at" - finds plant in view direction, ignores raycast hits
-                if (gardenManager.TryWaterPlantLookingAt(ray, interactRange))
-                    return;
+            case ToolType.Shovel:
+                if (isLookingAtSomething)
+                {
+                    RaycastHit hit = publicRaycast.GetHitInfo();
+                    // Only use hit if it's valid (has a collider)
+                    if (hit.collider != null)
+                    {
+                        gardenManager.TryRemoveDeadPlant(hit);
+                    }
+                }
                 break;
-        }
 
-        foreach (RaycastHit hit in hits)
-        {
-            bool success = false;
-            switch (currentTool)
-            {
-                case ToolType.Shovel:
-                    success = gardenManager.TryRemoveDeadPlant(hit);
-                    break;
-                case ToolType.SeedPacket:
-                    success = gardenManager.TryPlantSeed(hit, selectedSeedType);
-                    break;
-                case ToolType.WateringCan:
-                    success = gardenManager.TryWaterPlantAtPoint(hit.point);
-                    break;
-            }
-            if (success) return;
-        }
+            case ToolType.SeedPacket:
+                // Always allow planting - use the position from PublicRaycast
+                // This allows planting anywhere, even if not looking at something
+                gardenManager.TryPlantSeedAtPosition(lookPosition, selectedSeedType);
+                break;
 
-        if (currentTool == ToolType.WateringCan)
-        {
-            Vector3 fallbackPoint = hits.Length > 0 ? hits[0].point : ray.origin + ray.direction * (interactRange * 0.5f);
-            gardenManager.TryWaterPlantAtPoint(fallbackPoint);
+            case ToolType.WateringCan:
+                // Watering can work with position
+                gardenManager.TryWaterPlantAtPoint(lookPosition);
+                break;
         }
     }
 }

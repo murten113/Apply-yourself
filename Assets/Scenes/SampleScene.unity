@@ -2314,6 +2314,7 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 0
+  publicRaycast: {fileID: 614811763}
   gardenManager: {fileID: 844410142}
   playerCamera: {fileID: 4459864851089208649}
   selectedSeedType: {fileID: 11400000, guid: 2d5acec87820d844eabe1d8175f412fa, type: 2}
