@@ -72,6 +72,7 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
+<<<<<<< HEAD
                     "expectedControlType": "",
 <<<<<<< HEAD
 =======
@@ -139,18 +140,12 @@
                     "id": "173964ec-1c2f-455a-9b83-e61f41356329",
                     "expectedControlType": "",
 >>>>>>> MERGE-WITH-LORENZO
+=======
+                    "expectedControlType": "Button",
+>>>>>>> parent of 65ae83c (Simple look around system (werkt niet in plating scene))
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "TestInput",
-                    "type": "Value",
-                    "id": "83fd787c-c509-40f7-a234-18627060194f",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -549,6 +544,7 @@
                     "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
+<<<<<<< HEAD
                 },
                 {
                     "name": "",
@@ -684,6 +680,8 @@
                     "isComposite": false,
                     "isPartOfComposite": false
 >>>>>>> MERGE-WITH-LORENZO
+=======
+>>>>>>> parent of 65ae83c (Simple look around system (werkt niet in plating scene))
                 }
             ]
         },

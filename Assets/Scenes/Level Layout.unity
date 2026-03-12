@@ -673,7 +673,6 @@ GameObject:
   - component: {fileID: 394282125}
   - component: {fileID: 394282124}
   - component: {fileID: 394282123}
-  - component: {fileID: 394282127}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -773,30 +772,6 @@ Transform:
   - {fileID: 740761707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 159.902, z: 0}
---- !u!114 &394282127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 394282122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb9eec977d11e4d4caf86f7656af48a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainCamera: {fileID: 740761706}
-  InputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  LookAround:
-    m_Name: Look Around
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 265fccc2-7ec1-40b1-8965-3b3ca3facbf9
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  lookspeed: 50
 --- !u!1 &740761704
 GameObject:
   m_ObjectHideFlags: 0

@@ -1534,7 +1534,6 @@ GameObject:
   - component: {fileID: 4459864850232582102}
   - component: {fileID: 4459864850232582103}
   - component: {fileID: 4459864850232582110}
-  - component: {fileID: 4459864850232582111}
   m_Layer: 0
   m_Name: FirstPersonController
   m_TagString: Player
@@ -1563,30 +1562,6 @@ MonoBehaviour:
   gardenManager: {fileID: 844410142}
   playerCamera: {fileID: 4459864851089208649}
   selectedSeedType: {fileID: 11400000, guid: 2d5acec87820d844eabe1d8175f412fa, type: 2}
---- !u!114 &4459864850232582111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4459864850232582109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb9eec977d11e4d4caf86f7656af48a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainCamera: {fileID: 4459864851089208649}
-  InputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  LookAround:
-    m_Name: Look Around
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 99225643-55c0-467e-84af-753c00d94ee1
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  lookspeed: 50
 --- !u!114 &4459864850463601120
 MonoBehaviour:
   m_ObjectHideFlags: 0
