@@ -128,54 +128,6 @@ public class GardenManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove all dead plants (and plot dead plants) within the given radius of the center point.
-    /// Returns the number of dead plants removed.
-    /// </summary>
-    public int TryRemoveDeadPlantsInArea(Vector3 center, float radius)
-    {
-        int removed = 0;
-
-        // Remove dead plants from the plants list
-        for (int i = plants.Count - 1; i >= 0; i--)
-        {
-            Plant p = plants[i];
-            if (p.stage != PlantStage.Dead) continue;
-
-            float distSq = (p.worldPosition.x - center.x) * (p.worldPosition.x - center.x) +
-                          (p.worldPosition.z - center.z) * (p.worldPosition.z - center.z);
-            if (distSq <= radius * radius)
-            {
-                if (p.visualTransform != null)
-                    Destroy(p.visualTransform.gameObject);
-                plants.RemoveAt(i);
-                score += 10;
-                removed++;
-            }
-        }
-
-        // Remove dead plants from plots within radius
-        if (plots != null)
-        {
-            foreach (var plot in plots)
-            {
-                if (plot == null || !plot.HasDeadPlant) continue;
-
-                Vector3 plotPos = plot.PlantPosition;
-                float distSq = (plotPos.x - center.x) * (plotPos.x - center.x) +
-                              (plotPos.z - center.z) * (plotPos.z - center.z);
-                if (distSq <= radius * radius)
-                {
-                    plot.RemoveDeadPlant();
-                    score += 10;
-                    removed++;
-                }
-            }
-        }
-
-        return removed;
-    }
-
-    /// <summary>
     /// Try to remove a dead plant. Uses raycast hit for reliable plot/plant detection.
     /// </summary>
     public bool TryRemoveDeadPlant(RaycastHit hit)

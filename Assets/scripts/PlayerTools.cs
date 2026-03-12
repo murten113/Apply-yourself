@@ -15,8 +15,8 @@ public enum ToolType
 /// Handles tool switching and raycast-based interaction.
 /// Uses InputActionReference for New Input System (assign in Inspector).
 /// Falls back to legacy Input if actions are not assigned.
-/// Works with any movement controller - assign PublicRaycast, GardenManager, and Camera in Inspector.
 /// </summary>
+[RequireComponent(typeof(FirstPersonController))]
 public class PlayerTools : MonoBehaviour
 {
     [Header("Tools")]
@@ -249,13 +249,22 @@ public class PlayerTools : MonoBehaviour
     {
         if (gardenManager == null || publicRaycast == null) return;
 
+        // Use PublicRaycast instead of doing our own raycast
+        bool isLookingAtSomething = publicRaycast.IsLookingAtSomething();
         Vector3 lookPosition = publicRaycast.GetLookedAtPositionOrMaxDistance();
 
         switch (currentTool)
         {
             case ToolType.Shovel:
-                // AOE shovel: remove all dead plants within radius.
-                gardenManager.TryRemoveDeadPlantsInArea(lookPosition, shovelRadius);
+                if (isLookingAtSomething)
+                {
+                    RaycastHit hit = publicRaycast.GetHitInfo();
+                    // Only use hit if it's valid (has a collider)
+                    if (hit.collider != null)
+                    {
+                        gardenManager.TryRemoveDeadPlant(hit);
+                    }
+                }
                 break;
 
             case ToolType.SeedPacket:
