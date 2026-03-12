@@ -861,6 +861,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3dbd31bd604b3d64d9ba7f9d093b0b2d, type: 2}
   plots:
   - {fileID: 676328935}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   treeController: {fileID: 2072627670}
   plantVisualScale: 0.3
   debugWatering: 0
@@ -1549,12 +1555,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTool: 0
-  interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  selectTool1Action: {fileID: 348617242436284633, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  selectTool2Action: {fileID: -9007129951442850141, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  selectTool3Action: {fileID: -7435659018592318554, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  selectSeedNextAction: {fileID: -4404425340801945682, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  selectSeedPrevAction: {fileID: -9206796613525481255, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  interactRange: 5
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 0
   publicRaycast: {fileID: 614811763}
   gardenManager: {fileID: 844410142}
   playerCamera: {fileID: 4459864851089208649}
