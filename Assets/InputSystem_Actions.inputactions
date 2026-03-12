@@ -547,6 +547,17 @@
                     "action": "TestInput",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "57a167f8-836b-4f1e-8e98-37d6118b72f6",
+                    "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TestInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
