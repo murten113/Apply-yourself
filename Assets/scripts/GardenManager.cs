@@ -220,6 +220,27 @@ public class GardenManager : MonoBehaviour
         return found != null && WaterPlant(found);
     }
 
+    /// <summary>
+    /// Water all plants within the given radius of the center point.
+    /// Returns the number of plants watered.
+    /// </summary>
+    public int TryWaterPlantsInArea(Vector3 center, float radius)
+    {
+        int watered = 0;
+        foreach (Plant p in plants)
+        {
+            if (p.stage != PlantStage.NeedsWater && p.stage != PlantStage.Mature)
+                continue;
+
+            // Use XZ distance (ignore Y) so plants on flat ground are found correctly
+            float distSq = (p.worldPosition.x - center.x) * (p.worldPosition.x - center.x) +
+                          (p.worldPosition.z - center.z) * (p.worldPosition.z - center.z);
+            if (distSq <= radius * radius && WaterPlant(p))
+                watered++;
+        }
+        return watered;
+    }
+
     private bool WaterPlant(Plant plant)
     {
         if (plant.stage == PlantStage.NeedsWater)
