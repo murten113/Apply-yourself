@@ -78,7 +78,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TestInput",
+                    "name": "LookBinding",
                     "type": "Value",
                     "id": "83fd787c-c509-40f7-a234-18627060194f",
                     "expectedControlType": "Vector2",
@@ -276,17 +276,6 @@
                 },
                 {
                     "name": "",
-                    "id": "c1f7a91b-d0fd-4a62-997e-7fb9b69bf235",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
                     "path": "<Pointer>/delta",
                     "interactions": "",
@@ -303,6 +292,83 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "10225f3c-2ba9-4d67-a475-45285148ad5c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "bfc2910d-d3bf-4793-83d5-d673715e4aef",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "7c73e7fc-10bd-4f15-8611-9cad784b39f5",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "a31fbf50-d3fb-42af-9b57-6dbfa2065521",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "e84e0ad2-026e-47cd-9ad8-225b502f6071",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e3bd904e-f272-4909-b5ac-5f8328b0d88a",
+                    "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17dc8ba2-7710-4ab3-aa49-10345da1e426",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -545,7 +611,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -556,7 +622,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -567,7 +633,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -578,7 +644,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -589,7 +655,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -600,7 +666,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -611,7 +677,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TestInput",
+                    "action": "LookBinding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

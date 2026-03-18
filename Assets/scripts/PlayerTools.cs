@@ -186,32 +186,36 @@ public class PlayerTools : MonoBehaviour
             }
         }
 
-        // Interact: use tool
+        // Interact: movement nodes take priority over tools
+        bool lookingAtNode = IsLookingAtMovementNode();
         bool interactHeld = IsHeld(interactAction) || Input.GetMouseButton(0);
         bool interactPressed = WasPressed(interactAction) || Input.GetMouseButtonDown(0);
 
-        if (currentTool == ToolType.WateringCan || currentTool == ToolType.Shovel)
+        if (!lookingAtNode)
         {
-            // Hold to repeat for AOE tools
-            if (interactHeld)
+            if (currentTool == ToolType.WateringCan || currentTool == ToolType.Shovel)
             {
-                interactRepeatTimer -= Time.deltaTime;
-                if (interactRepeatTimer <= 0f)
+                // Hold to repeat for AOE tools
+                if (interactHeld)
                 {
-                    TryUseTool();
-                    interactRepeatTimer = Mathf.Max(0.05f, interactRepeatRate);
+                    interactRepeatTimer -= Time.deltaTime;
+                    if (interactRepeatTimer <= 0f)
+                    {
+                        TryUseTool();
+                        interactRepeatTimer = Mathf.Max(0.05f, interactRepeatRate);
+                    }
+                }
+                else
+                {
+                    interactRepeatTimer = 0f;
                 }
             }
             else
             {
-                interactRepeatTimer = 0f;
+                // Single press for seed packet
+                if (interactPressed)
+                    TryUseTool();
             }
-        }
-        else
-        {
-            // Single press for seed packet
-            if (interactPressed)
-                TryUseTool();
         }
 
         // Update circle indicator for AOE tools
@@ -236,6 +240,13 @@ public class PlayerTools : MonoBehaviour
     private bool IsHeld(InputActionReference actionRef)
     {
         return actionRef != null && actionRef.action != null && actionRef.action.IsPressed();
+    }
+
+    private bool IsLookingAtMovementNode()
+    {
+        if (publicRaycast == null || !publicRaycast.IsLookingAtSomething()) return false;
+        var go = publicRaycast.GetLookedAtObject();
+        return go != null && go.GetComponent<MovementNode>() != null;
     }
 
     private void CycleSeed(int direction)
