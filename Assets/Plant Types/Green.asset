@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: Green
   m_EditorClassIdentifier: 
   displayName: Flower G
-  flowerColor: {r: 0.015686274, g: 1, b: 0.17233054, a: 1}
+  flowerColor: {r: 0.015686274, g: 1, b: 0.17233054, a: 0}
+  sproutModelPrefab: {fileID: 0}
+  middleStageModelPrefab: {fileID: 0}
+  matureModelPrefab: {fileID: 0}
+  useSingleModel: 1
+  plantModelPrefab: {fileID: 958894663413667968, guid: 4306d2d06fdb29b488fc020cff536bf4, type: 3}
   growthSpeed: 0.5
   pointIncome: 8
   maintenanceRate: 0.05
