@@ -991,6 +991,7 @@ MonoBehaviour:
   minGrowthHeight: 0.3
   deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
   needsWaterDarken: 0.5
+  minPlantSpacing: 0.6
 --- !u!4 &844410143
 Transform:
   m_ObjectHideFlags: 0
