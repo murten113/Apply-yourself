@@ -21,6 +21,7 @@ public class GardenManager : MonoBehaviour
     [SerializeField] private float minGrowthHeight = 0.3f;  // Y scale multiplier at 0% growth (0.3 = 30% height)
     [SerializeField] private Color deadPlantColor = new Color(0.4f, 0.26f, 0.13f);  // Brown
     [SerializeField] private float needsWaterDarken = 0.5f;  // How much to darken when needing water (0.5 = 50% darker)
+    [SerializeField] private float minPlantSpacing = 0.6f;   // Minimum XZ distance between planted flowers
 
     // Runtime state
     private List<Plant> plants = new List<Plant>();
@@ -343,13 +344,13 @@ public class GardenManager : MonoBehaviour
         if (plot == null)
             return false;
 
-        // REMOVED: Prevent multiple plants per plot - now allows unlimited plants
-        // if (FindPlantInPlot(plot) != null)
-        //     return false;
+        if (!plot.IsUnlocked || !IsPositionInsidePlot(plot, hit.point))
+            return false;
 
-        // Use the exact hit point instead of plot.PlantPosition
-        // This allows planting anywhere on the plot
         Vector3 plantPosition = hit.point;
+
+        if (IsTooCloseToExistingPlant(plantPosition))
+            return false;
 
         // Ensure plant is slightly above the surface
         plantPosition.y += 0.1f; // Adjust this value based on your needs
@@ -368,31 +369,20 @@ public class GardenManager : MonoBehaviour
     {
         if (plantType == null) return false;
 
-        // Find plot at the position (optional - allows planting even without plots)
+        // Only allow planting on valid, unlocked plot areas.
         GardenPlot plot = GetPlotAtPosition(worldPosition);
-
-        // If plot exists, make sure it's unlocked (but allow planting without plot)
-        if (plot != null && !plot.IsUnlocked)
-        {
-            return false; // Plot is locked, don't plant
-        }
+        if (plot == null || !plot.IsUnlocked || !IsPositionInsidePlot(plot, worldPosition))
+            return false;
 
         // Use the exact position provided
         Vector3 plantPosition = worldPosition;
+        if (IsTooCloseToExistingPlant(plantPosition))
+            return false;
+
         plantPosition.y += 0.1f; // Slightly above surface
 
         Plant plant = new Plant(plantType, plantPosition);
-
-        // Create visual - use plot if available, otherwise create standalone
-        if (plot != null)
-        {
-            CreatePlantVisual(plant, plot);
-        }
-        else
-        {
-            // Create visual without plot (allows planting anywhere)
-            CreatePlantVisualAtPosition(plant, plantPosition);
-        }
+        CreatePlantVisual(plant, plot);
 
         plants.Add(plant);
         return true;
@@ -728,14 +718,54 @@ public class GardenManager : MonoBehaviour
     private GardenPlot GetPlotAtPosition(Vector3 worldPosition)
     {
         if (plots == null || plots.Length == 0) return null;
-        
-        float range = 2.5f;  // Generous range for plots with scale 2x2
+
+        GardenPlot nearestPlot = null;
+        float nearestDistance = float.MaxValue;
         foreach (var plot in plots)
         {
             if (plot == null) continue;
-            if (Vector3.Distance(plot.PlantPosition, worldPosition) <= range)
-                return plot;
+            float dist = Vector3.Distance(plot.PlantPosition, worldPosition);
+            if (dist < nearestDistance)
+            {
+                nearestDistance = dist;
+                nearestPlot = plot;
+            }
         }
+
+        if (nearestPlot != null && IsPositionInsidePlot(nearestPlot, worldPosition))
+            return nearestPlot;
+
         return null;
+    }
+
+    private bool IsPositionInsidePlot(GardenPlot plot, Vector3 worldPosition)
+    {
+        if (plot == null) return false;
+
+        Collider plotCollider = plot.GetComponent<Collider>();
+        if (plotCollider != null)
+        {
+            Vector3 closest = plotCollider.ClosestPoint(worldPosition);
+            return (closest - worldPosition).sqrMagnitude <= 0.0004f;
+        }
+
+        // Fallback if no collider exists on plot object.
+        const float fallbackRadius = 1.5f;
+        Vector2 a = new Vector2(plot.PlantPosition.x, plot.PlantPosition.z);
+        Vector2 b = new Vector2(worldPosition.x, worldPosition.z);
+        return Vector2.SqrMagnitude(a - b) <= fallbackRadius * fallbackRadius;
+    }
+
+    private bool IsTooCloseToExistingPlant(Vector3 worldPosition)
+    {
+        float minDistSq = minPlantSpacing * minPlantSpacing;
+        foreach (Plant p in plants)
+        {
+            float dx = p.worldPosition.x - worldPosition.x;
+            float dz = p.worldPosition.z - worldPosition.z;
+            if (dx * dx + dz * dz < minDistSq)
+                return true;
+        }
+        return false;
     }
 }
