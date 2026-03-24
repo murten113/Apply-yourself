@@ -617,17 +617,11 @@ public class GardenManager : MonoBehaviour
             
             // Position model at ground level
             t.position = plant.worldPosition;
-            
-            // Apply color tint to model (if it has renderers)
-            Color displayColor = GetPlantDisplayColor(plant);
-            Renderer[] allRenderers = t.GetComponentsInChildren<Renderer>();
-            foreach (var r in allRenderers)
-            {
-                if (r != null && r.material != null)
-                {
-                    r.material.color = displayColor;
-                }
-            }
+
+            // Keep the model's original look and only apply a darkening multiplier for state feedback.
+            float darkenAmount = GetPlantDarkenAmount(plant);
+            Color modelTint = Color.Lerp(Color.white, Color.black, darkenAmount);
+            ApplyModelTint(t, modelTint);
         }
         else
         {
@@ -672,6 +666,40 @@ public class GardenManager : MonoBehaviour
         else
         {
             return plant.type.flowerColor;
+        }
+    }
+
+    private float GetPlantDarkenAmount(Plant plant)
+    {
+        if (plant.stage == PlantStage.Dead)
+            return 0.75f;
+
+        if (plant.stage == PlantStage.NeedsWater)
+            return needsWaterDarken;
+
+        if (plant.stage == PlantStage.Mature && plant.waterLevel < 0.5f)
+            return (1f - plant.waterLevel * 2f) * needsWaterDarken;
+
+        return 0f;
+    }
+
+    private void ApplyModelTint(Transform modelRoot, Color tint)
+    {
+        Renderer[] allRenderers = modelRoot.GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in allRenderers)
+        {
+            if (r == null) continue;
+
+            MaterialPropertyBlock block = new MaterialPropertyBlock();
+            r.GetPropertyBlock(block);
+
+            // Support common shader color property names.
+            if (r.sharedMaterial != null && r.sharedMaterial.HasProperty("_BaseColor"))
+                block.SetColor("_BaseColor", tint);
+            if (r.sharedMaterial != null && r.sharedMaterial.HasProperty("_Color"))
+                block.SetColor("_Color", tint);
+
+            r.SetPropertyBlock(block);
         }
     }
 

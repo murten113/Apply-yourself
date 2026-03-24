@@ -18,7 +18,7 @@ MonoBehaviour:
   middleStageModelPrefab: {fileID: 0}
   matureModelPrefab: {fileID: 0}
   useSingleModel: 1
-  plantModelPrefab: {fileID: 958894663413667968, guid: 4306d2d06fdb29b488fc020cff536bf4, type: 3}
+  plantModelPrefab: {fileID: 9133306259633466911, guid: 76a5565948a33cc48a3ad21c52be7971, type: 3}
   growthSpeed: 0.5
   pointIncome: 8
   maintenanceRate: 0.05
