@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Yellow
   m_EditorClassIdentifier: 
   displayName: Flower Y
-  flowerColor: {r: 1, g: 1, b: 1, a: 1}
-  sproutModelPrefab: {fileID: 6988817725214235046, guid: c65345d8bc1f6be44b230682ebd6325f, type: 3}
-  middleStageModelPrefab: {fileID: 3429414498892362444, guid: 7a8e1b384674c7d4e87488949e5aa470, type: 3}
-  matureModelPrefab: {fileID: 8004110675824130178, guid: e8b8cc5150c32204b8c15ba18189bfa5, type: 3}
+  flowerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 0}
+  sproutModelPrefab: {fileID: 0}
+  middleStageModelPrefab: {fileID: 0}
+  matureModelPrefab: {fileID: 0}
   useSingleModel: 1
-  plantModelPrefab: {fileID: 8004110675824130178, guid: e8b8cc5150c32204b8c15ba18189bfa5, type: 3}
+  plantModelPrefab: {fileID: 958894663413667968, guid: 4306d2d06fdb29b488fc020cff536bf4, type: 3}
   growthSpeed: 1
   pointIncome: 5
-  maintenanceRate: 0.01
+  maintenanceRate: 0.1
   waterCapacity: 1
