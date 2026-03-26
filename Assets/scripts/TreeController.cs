@@ -23,11 +23,24 @@ public class TreeController : MonoBehaviour
     [Tooltip("If true, all models are hidden when score is below the sprout threshold")]
     [SerializeField] private bool hideAllBelowSproutThreshold = true;
 
-    private int lastAppliedStage = -2;
+    private int lastAppliedStage = int.MinValue;
 
-    private void Awake()
+    private void Start()
     {
-        ApplyStage(-1, force: true);
+        SyncFromGardenManager();
+    }
+
+    private void OnEnable()
+    {
+        lastAppliedStage = int.MinValue;
+        SyncFromGardenManager();
+    }
+
+    private void SyncFromGardenManager()
+    {
+        GardenManager gm = FindObjectOfType<GardenManager>();
+        if (gm != null)
+            UpdateTreeScale(gm.Score);
     }
 
     /// <summary>
@@ -60,6 +73,16 @@ public class TreeController : MonoBehaviour
         if (!force && stage == lastAppliedStage) return;
         lastAppliedStage = stage;
 
+        if ((sproutModel != null && sproutModel == smallTreeModel) ||
+            (sproutModel != null && sproutModel == finalTreeModel) ||
+            (smallTreeModel != null && smallTreeModel == finalTreeModel))
+        {
+            Debug.LogWarning(
+                "TreeController: Sprout / Small / Final must be three different GameObjects (usually three child meshes). " +
+                "If the same object is assigned to more than one slot, SetActive will fight and nothing will show.",
+                this);
+        }
+
         SetActiveSafe(sproutModel, stage == 0);
         SetActiveSafe(smallTreeModel, stage == 1);
         SetActiveSafe(finalTreeModel, stage == 2);
@@ -67,7 +90,8 @@ public class TreeController : MonoBehaviour
 
     private static void SetActiveSafe(GameObject go, bool active)
     {
-        if (go != null && go.activeSelf != active)
+        if (go == null) return;
+        if (go.activeSelf != active)
             go.SetActive(active);
     }
 }
