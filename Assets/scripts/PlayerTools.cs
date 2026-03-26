@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,28 @@ public class PlayerTools : MonoBehaviour
 {
     [Header("Tools")]
     [SerializeField] private ToolType currentTool = ToolType.Shovel;
+
+    [Header("Tool visuals (optional)")]
+    [Tooltip("Where tool models appear (e.g. child in front of camera). If unset, uses this transform.")]
+    [SerializeField] private Transform toolAttachPoint;
+    [Tooltip("Prefab or scene object for the shovel. Prefabs are instantiated once; scene objects are reparented here.")]
+    [SerializeField] private GameObject shovelToolModel;
+    [SerializeField] private GameObject seedPacketToolModel;
+    [SerializeField] private GameObject wateringCanToolModel;
+
+    [Header("Seed packet label")]
+    [Tooltip("Optional: TextMeshPro (3D) on the seed packet. If unassigned, we try GetComponentInChildren<TextMeshPro>. Import TMP Essentials (Window > Text Mesh Pro) if fonts are missing.")]
+    [SerializeField] private TMP_Text seedPacketLabelTmp;
+    [Tooltip("Fallback if you still use legacy TextMesh on the packet (optional).")]
+    [SerializeField] private TextMesh seedPacketLabelLegacyMesh;
+    [Tooltip("If not empty, this text is always shown on the packet instead of the selected plant's display name.")]
+    [SerializeField] private string seedPacketLabelOverride = "";
+    [Tooltip("If no TMP/TextMesh exists on the packet, create a 3D TextMeshPro label.")]
+    [SerializeField] private bool createSeedPacketLabelIfMissing = false;
+    [Tooltip("Local offset when a label is auto-created (relative to packet root).")]
+    [SerializeField] private Vector3 seedPacketLabelLocalOffset = new Vector3(0f, 0.02f, 0.02f);
+    [Tooltip("Font size for auto-created TextMeshPro (world-space TMP).")]
+    [SerializeField] private float seedPacketLabelFontSize = 3f;
 
     [Header("AOE Settings")]
     [Tooltip("Radius for watering can (waters all plants in area)")]
@@ -63,6 +86,12 @@ public class PlayerTools : MonoBehaviour
     private GameObject circleIndicatorObj;
     private float interactRepeatTimer;
 
+    private GameObject shovelVisualInstance;
+    private GameObject seedPacketVisualInstance;
+    private GameObject wateringCanVisualInstance;
+    private ToolType? lastAppliedToolVisual;
+    private string lastSeedPacketLabelApplied = "";
+
     public ToolType CurrentTool => currentTool;
     public PlantType SelectedSeedType => selectedSeedType;
 
@@ -90,6 +119,10 @@ public class PlayerTools : MonoBehaviour
     {
         SyncSeedSelectionFromManager();
         CreateCircleIndicator();
+        InitializeToolVisualInstances();
+        EnsureSeedPacketLabel();
+        ApplyToolVisuals();
+        RefreshSeedPacketLabel();
     }
 
     private void CreateCircleIndicator()
@@ -230,6 +263,110 @@ public class PlayerTools : MonoBehaviour
                 UpdateCircleIndicator(r, c);
             }
         }
+
+        if (!lastAppliedToolVisual.HasValue || lastAppliedToolVisual.Value != currentTool)
+            ApplyToolVisuals();
+
+        RefreshSeedPacketLabel();
+    }
+
+    private void InitializeToolVisualInstances()
+    {
+        Transform parent = toolAttachPoint != null ? toolAttachPoint : transform;
+        shovelVisualInstance = ResolveToolModel(shovelToolModel, parent);
+        seedPacketVisualInstance = ResolveToolModel(seedPacketToolModel, parent);
+        wateringCanVisualInstance = ResolveToolModel(wateringCanToolModel, parent);
+
+        if (shovelVisualInstance != null && (shovelVisualInstance == seedPacketVisualInstance || shovelVisualInstance == wateringCanVisualInstance) ||
+            seedPacketVisualInstance != null && seedPacketVisualInstance == wateringCanVisualInstance)
+        {
+            Debug.LogWarning(
+                "PlayerTools: Each tool model should be a different GameObject. Duplicate references will look wrong when switching tools.",
+                this);
+        }
+    }
+
+    private void EnsureSeedPacketLabel()
+    {
+        if (seedPacketVisualInstance == null) return;
+
+        if (seedPacketLabelTmp == null)
+            seedPacketLabelTmp = seedPacketVisualInstance.GetComponentInChildren<TextMeshPro>(true);
+
+        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null)
+            seedPacketLabelLegacyMesh = seedPacketVisualInstance.GetComponentInChildren<TextMesh>(true);
+
+        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null && createSeedPacketLabelIfMissing)
+        {
+            GameObject labelGo = new GameObject("SeedPacketLabelTMP");
+            labelGo.transform.SetParent(seedPacketVisualInstance.transform, false);
+            labelGo.transform.localPosition = seedPacketLabelLocalOffset;
+            labelGo.transform.localRotation = Quaternion.identity;
+            TextMeshPro tmp = labelGo.AddComponent<TextMeshPro>();
+            tmp.text = "";
+            tmp.fontSize = seedPacketLabelFontSize;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.black;
+            tmp.enableWordWrapping = false;
+            tmp.overflowMode = TextOverflowModes.Overflow;
+            seedPacketLabelTmp = tmp;
+        }
+    }
+
+    private void RefreshSeedPacketLabel()
+    {
+        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null) return;
+
+        string text = GetSeedPacketLabelText();
+        if (text == lastSeedPacketLabelApplied) return;
+        lastSeedPacketLabelApplied = text;
+
+        if (seedPacketLabelTmp != null)
+            seedPacketLabelTmp.text = text;
+        else if (seedPacketLabelLegacyMesh != null)
+            seedPacketLabelLegacyMesh.text = text;
+    }
+
+    private string GetSeedPacketLabelText()
+    {
+        if (!string.IsNullOrEmpty(seedPacketLabelOverride))
+            return seedPacketLabelOverride;
+        return selectedSeedType != null ? selectedSeedType.displayName : "";
+    }
+
+    /// <summary>
+    /// Scene instances are reparented under the attach point; project prefabs are instantiated once.
+    /// </summary>
+    private static GameObject ResolveToolModel(GameObject prefabOrInstance, Transform parent)
+    {
+        if (prefabOrInstance == null) return null;
+
+        if (prefabOrInstance.scene.IsValid())
+        {
+            prefabOrInstance.transform.SetParent(parent, false);
+            return prefabOrInstance;
+        }
+
+        GameObject inst = Object.Instantiate(prefabOrInstance, parent);
+        inst.transform.localPosition = Vector3.zero;
+        inst.transform.localRotation = Quaternion.identity;
+        return inst;
+    }
+
+    private void ApplyToolVisuals()
+    {
+        lastAppliedToolVisual = currentTool;
+
+        SetToolInstanceActive(shovelVisualInstance, currentTool == ToolType.Shovel);
+        SetToolInstanceActive(seedPacketVisualInstance, currentTool == ToolType.SeedPacket);
+        SetToolInstanceActive(wateringCanVisualInstance, currentTool == ToolType.WateringCan);
+    }
+
+    private static void SetToolInstanceActive(GameObject instance, bool active)
+    {
+        if (instance == null) return;
+        if (instance.activeSelf != active)
+            instance.SetActive(active);
     }
 
     private bool WasPressed(InputActionReference actionRef)
