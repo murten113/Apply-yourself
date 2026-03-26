@@ -19,8 +19,8 @@ public class GameUI : MonoBehaviour
 
     private void Start()
     {
-        if (playerTools == null) playerTools = FindObjectOfType<PlayerTools>();
-        if (gardenManager == null) gardenManager = FindObjectOfType<GardenManager>();
+        if (playerTools == null) playerTools = Object.FindFirstObjectByType<PlayerTools>();
+        if (gardenManager == null) gardenManager = Object.FindFirstObjectByType<GardenManager>();
 
         if (toolText == null || scoreText == null)
             CreateUI();

@@ -307,7 +307,7 @@ public class PlayerTools : MonoBehaviour
             tmp.fontSize = seedPacketLabelFontSize;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.black;
-            tmp.enableWordWrapping = false;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.overflowMode = TextOverflowModes.Overflow;
             seedPacketLabelTmp = tmp;
         }

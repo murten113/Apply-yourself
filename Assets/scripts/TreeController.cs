@@ -38,7 +38,7 @@ public class TreeController : MonoBehaviour
 
     private void SyncFromGardenManager()
     {
-        GardenManager gm = FindObjectOfType<GardenManager>();
+        GardenManager gm = Object.FindFirstObjectByType<GardenManager>();
         if (gm != null)
             UpdateTreeScale(gm.Score);
     }

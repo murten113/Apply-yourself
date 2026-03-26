@@ -43,7 +43,7 @@ public class GardenManager : MonoBehaviour
         gameTimer = gameDurationSeconds;
 
         if (treeController == null)
-            treeController = FindObjectOfType<TreeController>();
+            treeController = Object.FindFirstObjectByType<TreeController>();
 
         if (treeController != null)
             treeController.UpdateTreeScale(score);
@@ -61,7 +61,7 @@ public class GardenManager : MonoBehaviour
             unlockedPlotCount = plots.Length; // All plots unlocked
         }
 
-        if (FindObjectOfType<GameUI>() == null)
+        if (Object.FindFirstObjectByType<GameUI>() == null)
         {
             GameObject uiObj = new GameObject("GameUI");
             uiObj.AddComponent<GameUI>();
