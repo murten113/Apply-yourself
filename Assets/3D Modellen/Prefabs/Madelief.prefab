@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9123628414750171849
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8491100698017560691}
+  m_Layer: 0
+  m_Name: Madelief
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8491100698017560691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9123628414750171849}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.6637204, y: 0.3, z: -1.758}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7753396694068210485}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7787603690204089566
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8491100698017560691}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 54.67394
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 54.67395
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 54.673946
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.37125826
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.43309844
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.12675142
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.534264
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.74228936
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.3203046
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.24692811
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 72a3bc3804347084ebd48617bcb822b5, type: 2}
+    - target: {fileID: 919132149155446097, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+      propertyPath: m_Name
+      value: Madelief
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+--- !u!4 &7753396694068210485 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a6bbdd433a4ce6947a45b40ed11710c0, type: 3}
+  m_PrefabInstance: {fileID: 7787603690204089566}
+  m_PrefabAsset: {fileID: 0}
