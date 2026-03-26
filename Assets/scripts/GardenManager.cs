@@ -42,6 +42,12 @@ public class GardenManager : MonoBehaviour
     {
         gameTimer = gameDurationSeconds;
 
+        if (treeController == null)
+            treeController = FindObjectOfType<TreeController>();
+
+        if (treeController != null)
+            treeController.UpdateTreeScale(score);
+
         // Unlock all plots at start (no unlocking system)
         if (plots != null)
         {
