@@ -94,15 +94,17 @@ public class NodeMovementController : MonoBehaviour
         if (lookAction?.action != null)
         {
             look = lookAction.action.ReadValue<Vector2>();
-            float scale = stickSensitivity * Time.deltaTime;
-            if (look.sqrMagnitude > 1f)
-                scale = lookSensitivity;
-            look *= scale * lookSpeed;
+
+            // Normalize so diagonal == cardinal speed, then apply one consistent scale
+            if (look.sqrMagnitude > 0.01f)
+                look = look.normalized;
+
+            look *= stickSensitivity * Time.deltaTime * lookSpeed;
         }
         else
         {
-            // Legacy fallback
-            look = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * lookSensitivity * 10f * lookSpeed;
+            look = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))
+                   * lookSensitivity * 10f * lookSpeed;
         }
 
         yaw += look.x;

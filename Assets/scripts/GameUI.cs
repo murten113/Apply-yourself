@@ -14,10 +14,10 @@ public class GameUI : MonoBehaviour
     [Header("UI Elements (optional - will create if null)")]
     [SerializeField] private Text toolText;
     [SerializeField] private Text scoreText;
-
+    
     [Header("Visibility")]
     [Tooltip("When off, hides only the score label. Tool selection UI is always shown. If GardenManager creates this object at runtime, it sets this from GardenManager > Show Score In UI.")]
-    [SerializeField] private bool showScoreUI = true;
+    [SerializeField] private bool showScoreUI = false;
 
     private Canvas canvas;
 

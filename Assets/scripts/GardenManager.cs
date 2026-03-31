@@ -71,7 +71,7 @@ public class GardenManager : MonoBehaviour
         {
             GameObject uiObj = new GameObject("GameUI");
             GameUI ui = uiObj.AddComponent<GameUI>();
-            ui.SetShowScoreUI(showScoreInUI);
+            //ui.SetShowScoreUI(showScoreInUI);
         }
     }
 

@@ -19,7 +19,7 @@ MonoBehaviour:
   matureModelPrefab: {fileID: 3429414498892362444, guid: 7a8e1b384674c7d4e87488949e5aa470, type: 3}
   useSingleModel: 0
   plantModelPrefab: {fileID: 3429414498892362444, guid: 7a8e1b384674c7d4e87488949e5aa470, type: 3}
-  growthSpeed: 2
+  growthSpeed: 0.5
   pointIncome: 8
-  maintenanceRate: 0.1
+  maintenanceRate: 0.005
   waterCapacity: 30

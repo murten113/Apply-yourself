@@ -88,12 +88,12 @@
                 },
                 {
                     "name": "SelectTool1",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "84e7a251-d551-4540-be7c-5e3abb348438",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "SelectTool2",
@@ -376,7 +376,7 @@
                 {
                     "name": "",
                     "id": "17dc8ba2-7710-4ab3-aa49-10345da1e426",
-                    "path": "<Gamepad>/leftStick",
+                    "path": "<Gamepad>/dpad",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -595,6 +595,17 @@
                 },
                 {
                     "name": "",
+                    "id": "d00c2b4b-c7a4-48e5-a46c-086e80eac0cc",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4f4649ac-64a8-4a73-af11-b3faef356a4d",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -705,8 +716,30 @@
                 },
                 {
                     "name": "",
+                    "id": "8b0898d2-3029-41f0-b3e5-7196e4262839",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTool1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6e8b1490-265f-4424-bfe7-dd82e148c6ed",
                     "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTool2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10961b63-8027-4945-b32f-1bea8b1f6075",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -727,8 +760,30 @@
                 },
                 {
                     "name": "",
+                    "id": "7f79b0d1-1458-4597-aaa4-757e7be8dcff",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTool3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a34ee2ad-6c38-48ff-ac93-2d8eb4d5ed1d",
                     "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextSeed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7ea9049-6aae-44df-8c2f-b46d5d7f3a17",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
