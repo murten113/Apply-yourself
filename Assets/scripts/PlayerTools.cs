@@ -32,6 +32,8 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private GameObject wateringCanToolModel;
 
     [Header("Seed packet label")]
+    [Tooltip("When off, hides the 3D label on the seed packet (TMP or legacy TextMesh).")]
+    [SerializeField] private bool showSeedPacketLabel = true;
     [Tooltip("Optional: TextMeshPro (3D) on the seed packet. If unassigned, we try GetComponentInChildren<TextMeshPro>. Import TMP Essentials (Window > Text Mesh Pro) if fonts are missing.")]
     [SerializeField] private TMP_Text seedPacketLabelTmp;
     [Tooltip("Fallback if you still use legacy TextMesh on the packet (optional).")]
@@ -113,6 +115,11 @@ public class PlayerTools : MonoBehaviour
         selectTool3Action?.action?.Disable();
         selectSeedNextAction?.action?.Disable();
         selectSeedPrevAction?.action?.Disable();
+    }
+
+    private void OnValidate()
+    {
+        ApplySeedPacketLabelVisibility();
     }
 
     private void Start()
@@ -311,6 +318,16 @@ public class PlayerTools : MonoBehaviour
             tmp.overflowMode = TextOverflowModes.Overflow;
             seedPacketLabelTmp = tmp;
         }
+
+        ApplySeedPacketLabelVisibility();
+    }
+
+    private void ApplySeedPacketLabelVisibility()
+    {
+        if (seedPacketLabelTmp != null)
+            seedPacketLabelTmp.gameObject.SetActive(showSeedPacketLabel);
+        if (seedPacketLabelLegacyMesh != null)
+            seedPacketLabelLegacyMesh.gameObject.SetActive(showSeedPacketLabel);
     }
 
     private void RefreshSeedPacketLabel()
@@ -318,13 +335,16 @@ public class PlayerTools : MonoBehaviour
         if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null) return;
 
         string text = GetSeedPacketLabelText();
-        if (text == lastSeedPacketLabelApplied) return;
-        lastSeedPacketLabelApplied = text;
+        if (text != lastSeedPacketLabelApplied)
+        {
+            lastSeedPacketLabelApplied = text;
+            if (seedPacketLabelTmp != null)
+                seedPacketLabelTmp.text = text;
+            else if (seedPacketLabelLegacyMesh != null)
+                seedPacketLabelLegacyMesh.text = text;
+        }
 
-        if (seedPacketLabelTmp != null)
-            seedPacketLabelTmp.text = text;
-        else if (seedPacketLabelLegacyMesh != null)
-            seedPacketLabelLegacyMesh.text = text;
+        ApplySeedPacketLabelVisibility();
     }
 
     private string GetSeedPacketLabelText()

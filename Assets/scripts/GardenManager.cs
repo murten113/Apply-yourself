@@ -10,6 +10,10 @@ public class GardenManager : MonoBehaviour
     [Header("Game Settings")]
     [SerializeField] private float gameDurationSeconds = 180f;
 
+    [Header("UI")]
+    [Tooltip("When GameUI is auto-created at runtime, this controls whether the score label is shown. Add your own GameUI to the scene if you need full inspector control.")]
+    [SerializeField] private bool showScoreInUI = true;
+
     [Header("References")]
     [SerializeField] private PlantType[] availablePlantTypes;
     [SerializeField] private GardenPlot[] plots;
@@ -66,7 +70,8 @@ public class GardenManager : MonoBehaviour
         if (Object.FindFirstObjectByType<GameUI>() == null)
         {
             GameObject uiObj = new GameObject("GameUI");
-            uiObj.AddComponent<GameUI>();
+            GameUI ui = uiObj.AddComponent<GameUI>();
+            ui.SetShowScoreUI(showScoreInUI);
         }
     }
 

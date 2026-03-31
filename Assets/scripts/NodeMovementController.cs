@@ -14,6 +14,8 @@ public class NodeMovementController : MonoBehaviour
     [SerializeField] private float lookSensitivity = 0.15f;
     [Tooltip("Extra multiplier for gamepad/joystick (stick returns -1 to 1, needs higher scale)")]
     [SerializeField] private float stickSensitivity = 70f;
+    [Tooltip("Overall camera look multiplier (mouse and gamepad). Use 1 for default; raise or lower to tune feel.")]
+    [SerializeField] private float lookSpeed = 1f;
     [SerializeField] private float maxLookAngle = 80f;
     [SerializeField] private bool invertY = false;
     [SerializeField] private bool lockCursor = true;
@@ -92,14 +94,15 @@ public class NodeMovementController : MonoBehaviour
         if (lookAction?.action != null)
         {
             look = lookAction.action.ReadValue<Vector2>();
-            // Mouse delta is in pixels; gamepad/stick is -1 to 1. Use magnitude to detect.
-            float scale = look.sqrMagnitude > 1f ? lookSensitivity : stickSensitivity * Time.deltaTime;
-            look *= scale;
+            float scale = stickSensitivity * Time.deltaTime;
+            if (look.sqrMagnitude > 1f)
+                scale = lookSensitivity;
+            look *= scale * lookSpeed;
         }
         else
         {
             // Legacy fallback
-            look = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * lookSensitivity * 10f;
+            look = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * lookSensitivity * 10f * lookSpeed;
         }
 
         yaw += look.x;

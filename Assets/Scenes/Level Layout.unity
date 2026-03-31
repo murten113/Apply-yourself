@@ -1983,6 +1983,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5182e113017cbab4698e22758867a546, type: 3}
+--- !u!1 &708335906 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8885277921592018177, guid: 768a73e237efe674384fb26da0cc3d7d, type: 3}
+  m_PrefabInstance: {fileID: 1021507232}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &740761704
 GameObject:
   m_ObjectHideFlags: 0
@@ -15992,6 +15997,7 @@ MonoBehaviour:
   cameraPivot: {fileID: 0}
   lookSensitivity: 0.15
   stickSensitivity: 70
+  lookSpeed: 1
   maxLookAngle: 80
   invertY: 0
   lockCursor: 1
@@ -16014,8 +16020,9 @@ MonoBehaviour:
   currentTool: 0
   toolAttachPoint: {fileID: 781142745}
   shovelToolModel: {fileID: 0}
-  seedPacketToolModel: {fileID: 0}
+  seedPacketToolModel: {fileID: 708335906}
   wateringCanToolModel: {fileID: 0}
+  showSeedPacketLabel: 1
   seedPacketLabelTmp: {fileID: 0}
   seedPacketLabelLegacyMesh: {fileID: 0}
   seedPacketLabelOverride: 
@@ -16946,6 +16953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDurationSeconds: 180
+  showScoreInUI: 1
   availablePlantTypes:
   - {fileID: 11400000, guid: 2d5acec87820d844eabe1d8175f412fa, type: 2}
   - {fileID: 11400000, guid: 9dbe59d737537e448bd746127805c6b6, type: 2}

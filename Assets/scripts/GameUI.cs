@@ -15,7 +15,18 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Text toolText;
     [SerializeField] private Text scoreText;
 
+    [Header("Visibility")]
+    [Tooltip("When off, hides only the score label. Tool selection UI is always shown. If GardenManager creates this object at runtime, it sets this from GardenManager > Show Score In UI.")]
+    [SerializeField] private bool showScoreUI = true;
+
     private Canvas canvas;
+
+    /// <summary>Sets score label visibility (used when GardenManager spawns GameUI at runtime).</summary>
+    public void SetShowScoreUI(bool show)
+    {
+        showScoreUI = show;
+        ApplyScoreVisibility();
+    }
 
     private void Start()
     {
@@ -24,6 +35,19 @@ public class GameUI : MonoBehaviour
 
         if (toolText == null || scoreText == null)
             CreateUI();
+
+        ApplyScoreVisibility();
+    }
+
+    private void OnValidate()
+    {
+        ApplyScoreVisibility();
+    }
+
+    private void ApplyScoreVisibility()
+    {
+        if (scoreText == null) return;
+        scoreText.gameObject.SetActive(showScoreUI);
     }
 
     private void Update()
@@ -36,7 +60,7 @@ public class GameUI : MonoBehaviour
             toolText.text = $"Tool: {toolName}";
         }
 
-        if (scoreText != null && gardenManager != null)
+        if (showScoreUI && scoreText != null && gardenManager != null)
             scoreText.text = $"Score: {gardenManager.Score}";
     }
 
