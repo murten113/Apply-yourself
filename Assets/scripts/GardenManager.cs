@@ -22,6 +22,8 @@ public class GardenManager : MonoBehaviour
     [SerializeField] private Color deadPlantColor = new Color(0.4f, 0.26f, 0.13f);  // Brown
     [SerializeField] private float needsWaterDarken = 0.5f;  // How much to darken when needing water (0.5 = 50% darker)
     [SerializeField] private float minPlantSpacing = 0.6f;   // Minimum XZ distance between planted flowers
+    [Tooltip("Planting requires surface normal.y >= this (walls ~0; flat ground ~1). Stops seeds on vertical surfaces.")]
+    [SerializeField] private float minPlantSurfaceNormalY = 0.45f;
 
     // Runtime state
     private List<Plant> plants = new List<Plant>();
@@ -371,12 +373,26 @@ public class GardenManager : MonoBehaviour
     /// Plant a seed at a specific world position (uses PublicRaycast position).
     /// Allows multiple plants per plot and plants anywhere on the plot.
     /// </summary>
-    public bool TryPlantSeedAtPosition(Vector3 worldPosition, PlantType plantType)
+    public bool TryPlantSeedAtPosition(Vector3 worldPosition, PlantType plantType, Vector3? surfaceNormal = null, Collider hitCollider = null)
     {
         if (plantType == null) return false;
 
-        // Only allow planting on valid, unlocked plot areas.
-        GardenPlot plot = GetPlotAtPosition(worldPosition);
+        if (surfaceNormal.HasValue && surfaceNormal.Value.y < minPlantSurfaceNormalY)
+            return false;
+
+        // If we have a raycast hit, only that geometry can authorize planting (stops nearby-plot fallback on random floors).
+        GardenPlot plot;
+        if (hitCollider != null)
+        {
+            plot = hitCollider.GetComponentInParent<GardenPlot>();
+            if (plot == null)
+                return false;
+        }
+        else
+        {
+            plot = GetPlotAtPosition(worldPosition);
+        }
+
         if (plot == null || !plot.IsUnlocked || !IsPositionInsidePlot(plot, worldPosition))
             return false;
 
@@ -783,8 +799,8 @@ public class GardenManager : MonoBehaviour
             return (closest - worldPosition).sqrMagnitude <= 0.0004f;
         }
 
-        // Fallback if no collider exists on plot object.
-        const float fallbackRadius = 1.5f;
+        // Fallback if no collider exists on plot object (tight; assign Box/Mesh colliders to plots when possible).
+        const float fallbackRadius = 0.45f;
         Vector2 a = new Vector2(plot.PlantPosition.x, plot.PlantPosition.z);
         Vector2 b = new Vector2(worldPosition.x, worldPosition.z);
         return Vector2.SqrMagnitude(a - b) <= fallbackRadius * fallbackRadius;

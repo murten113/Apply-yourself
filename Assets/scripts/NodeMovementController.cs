@@ -52,6 +52,9 @@ public class NodeMovementController : MonoBehaviour
 
     private void Start()
     {
+        if (publicRaycast == null)
+            publicRaycast = Object.FindFirstObjectByType<PublicRaycast>();
+
         if (playerCamera == null) playerCamera = Camera.main;
         if (cameraPivot == null && playerCamera != null)
             cameraPivot = playerCamera.transform; // Use camera for pitch when no separate pivot
@@ -131,11 +134,11 @@ public class NodeMovementController : MonoBehaviour
 
     private MovementNode GetLookedAtNode()
     {
-        if (publicRaycast == null || !publicRaycast.IsLookingAtSomething())
-            return null;
-
-        var go = publicRaycast.GetLookedAtObject();
-        return go != null ? go.GetComponent<MovementNode>() : null;
+        if (publicRaycast == null) return null;
+        // Same as PlayerTools: first Physics.Raycast hit is often level geometry, not the node.
+        return publicRaycast.TryGetNearestParentComponent<MovementNode>(out MovementNode node, out _)
+            ? node
+            : null;
     }
 
     private bool WasPressed(InputActionReference actionRef)

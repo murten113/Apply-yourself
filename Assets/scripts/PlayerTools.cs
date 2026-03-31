@@ -381,9 +381,9 @@ public class PlayerTools : MonoBehaviour
 
     private bool IsLookingAtMovementNode()
     {
-        if (publicRaycast == null || !publicRaycast.IsLookingAtSomething()) return false;
-        var go = publicRaycast.GetLookedAtObject();
-        return go != null && go.GetComponent<MovementNode>() != null;
+        if (publicRaycast == null) return false;
+        // RaycastAll: ProBuilder ground/walls often win the first hit; nodes may be a later hit or triggers.
+        return publicRaycast.TryGetNearestParentComponent<MovementNode>(out _, out _);
     }
 
     private void CycleSeed(int direction)
@@ -407,9 +407,10 @@ public class PlayerTools : MonoBehaviour
                 break;
 
             case ToolType.SeedPacket:
-                // Always allow planting - use the position from PublicRaycast
-                // This allows planting anywhere, even if not looking at something
-                gardenManager.TryPlantSeedAtPosition(lookPosition, selectedSeedType);
+                // Require a real hit so we can reject vertical surfaces (ProBuilder walls).
+                if (!publicRaycast.IsLookingAtSomething()) break;
+                RaycastHit seedHit = publicRaycast.GetHitInfo();
+                gardenManager.TryPlantSeedAtPosition(seedHit.point, selectedSeedType, seedHit.normal, seedHit.collider);
                 break;
 
             case ToolType.WateringCan:

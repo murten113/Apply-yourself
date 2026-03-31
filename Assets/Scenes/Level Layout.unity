@@ -1249,12 +1249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fdb38db343dd0049be618ad4af83fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 1362935825}
   maxDistance: 100
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   useMousePosition: 1
+  triggerInteraction: 2
   showDebugRay: 1
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
   showDebugLogs: 1
@@ -15997,7 +15998,7 @@ MonoBehaviour:
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   moveSpeed: 5
-  publicRaycast: {fileID: 0}
+  publicRaycast: {fileID: 490231079}
 --- !u!114 &1111667786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16959,6 +16960,7 @@ MonoBehaviour:
   deadPlantColor: {r: 0.4, g: 0.26, b: 0.13, a: 1}
   needsWaterDarken: 0.5
   minPlantSpacing: 0.6
+  minPlantSurfaceNormalY: 0.45
 --- !u!1 &1560868982
 GameObject:
   m_ObjectHideFlags: 0

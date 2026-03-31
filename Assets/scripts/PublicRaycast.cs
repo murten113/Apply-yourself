@@ -9,6 +9,8 @@ public class PublicRaycast : MonoBehaviour
     public float maxDistance = 100f;
     public LayerMask layerMask = -1; // All layers by default
     public bool useMousePosition = true; // If false, uses camera center
+    [Tooltip("Include trigger colliders (recommended for MovementNode zones).")]
+    [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Collide;
     
     [Header("Debug")]
     public bool showDebugRay = true;
@@ -62,8 +64,8 @@ public class PublicRaycast : MonoBehaviour
             ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         }
         
-        // Perform the raycast
-        isHit = Physics.Raycast(ray, out hit, maxDistance, layerMask);
+        // Single hit for general "what you're looking at" (closest surface)
+        isHit = Physics.Raycast(ray, out hit, maxDistance, layerMask, triggerInteraction);
         
         // Debug visualization (only visible in Scene view)
         if (showDebugRay)
@@ -98,6 +100,42 @@ public class PublicRaycast : MonoBehaviour
             return hit.collider.gameObject;
         }
         return null;
+    }
+
+    /// <summary>
+    /// Walks all hits along the view ray (closest first) and returns the first collider whose
+    /// hierarchy has <typeparamref name="T"/>. Use this for MovementNode so ProBuilder ground/walls
+    /// in front of a node do not block targeting (the node is still in the hit list).
+    /// </summary>
+    public bool TryGetNearestParentComponent<T>(out T component, out RaycastHit hitForComponent) where T : Component
+    {
+        component = null;
+        hitForComponent = default;
+
+        if (playerCamera == null) return false;
+
+        Ray ray = useMousePosition
+            ? playerCamera.ScreenPointToRay(Input.mousePosition)
+            : new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+
+        RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, layerMask, triggerInteraction);
+        if (hits == null || hits.Length == 0) return false;
+
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (RaycastHit h in hits)
+        {
+            if (h.collider == null) continue;
+            T found = h.collider.GetComponentInParent<T>();
+            if (found != null)
+            {
+                component = found;
+                hitForComponent = h;
+                return true;
+            }
+        }
+
+        return false;
     }
     
     // Public method to get the RaycastHit (for more advanced use)
