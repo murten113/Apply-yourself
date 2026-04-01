@@ -14,8 +14,9 @@ public class GameUI : MonoBehaviour
     [Header("UI Elements (optional - will create if null)")]
     [SerializeField] private Text toolText;
     [SerializeField] private Text scoreText;
-    
-    [Header("Visibility")]
+    [SerializeField] private Text instructionText;
+
+   [Header("Visibility")]
     [Tooltip("When off, hides only the score label. Tool selection UI is always shown. If GardenManager creates this object at runtime, it sets this from GardenManager > Show Score In UI.")]
     [SerializeField] private bool showScoreUI = false;
 
@@ -57,6 +58,8 @@ public class GameUI : MonoBehaviour
             string toolName = GetToolDisplayName(playerTools.CurrentTool);
             if (playerTools.CurrentTool == ToolType.SeedPacket && playerTools.SelectedSeedType != null)
                 toolName += $" ({playerTools.SelectedSeedType.displayName})";
+            if (instructionText != null && playerTools != null)
+                instructionText.text = GetToolInstructions(playerTools.CurrentTool);
             toolText.text = $"Tool: {toolName}";
         }
 
@@ -72,6 +75,17 @@ public class GameUI : MonoBehaviour
             ToolType.SeedPacket => "Seed Packet",
             ToolType.WateringCan => "Watering Can",
             _ => tool.ToString()
+        };
+    }
+
+    private string GetToolInstructions(ToolType tool)
+    {
+        return tool switch
+        {
+            ToolType.Shovel => "Use the Red button to get rid of dead plants.",
+            ToolType.SeedPacket => "Use the Red button to plant a seed.",
+            ToolType.WateringCan => "Use the Red button to water a plant.",
+            _ => ""
         };
     }
 
