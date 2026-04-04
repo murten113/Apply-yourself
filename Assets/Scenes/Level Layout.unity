@@ -10544,7 +10544,7 @@ GameObject:
   - component: {fileID: 602763084}
   - component: {fileID: 602763083}
   m_Layer: 0
-  m_Name: Garden L main
+  m_Name: PlayerGarden L main
   m_TagString: GardenPlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42323,7 +42323,7 @@ GameObject:
   - component: {fileID: 1767116640}
   - component: {fileID: 1767116639}
   m_Layer: 0
-  m_Name: Garden R main
+  m_Name: PlayerGarden R main
   m_TagString: GardenPlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46243,7 +46243,7 @@ SceneRoots:
   - {fileID: 1836722296}
   - {fileID: 1258439449}
   - {fileID: 707771140}
-  - {fileID: 1851586601}
   - {fileID: 1678863668}
+  - {fileID: 1851586601}
   - {fileID: 596487554}
   - {fileID: 1388366997}

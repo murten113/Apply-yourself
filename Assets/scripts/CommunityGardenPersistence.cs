@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Local-only persistence: saves the player garden on quit, keeps a ring of 8 neighbour snapshots,
-/// and spawns decorative mature plants under each neighbour plot (e.g. <c>Garden L (1)</c> / <c>Garden R (1)</c>).
+/// Local-only persistence: on quit, saves a snapshot into a ring of 8 neighbour gardens and updates JSON.
+/// The playable garden is reset on every level load (nothing is restored from <c>playerGarden</c> in the file).
+/// Runs before <see cref="GardenManager"/> so reset happens before the first gameplay frame.
 /// </summary>
-[DefaultExecutionOrder(100)]
+[DefaultExecutionOrder(-50)]
 public class CommunityGardenPersistence : MonoBehaviour
 {
     private const int RingSize = 8;
@@ -89,7 +90,11 @@ public class CommunityGardenPersistence : MonoBehaviour
     private void LoadAndApply()
     {
         var file = ReadOrCreateFile();
-        ApplyPlayerGarden(file.playerGarden);
+        if (gardenManager == null)
+            gardenManager = FindGardenManager();
+        if (gardenManager != null)
+            gardenManager.ResetSessionForPersistenceLoad();
+
         ApplyNeighbourDecorations(file);
     }
 
@@ -150,36 +155,6 @@ public class CommunityGardenPersistence : MonoBehaviour
         }
 
         file.nextRingWriteIndex = Mathf.Clamp(file.nextRingWriteIndex, 0, RingSize - 1);
-    }
-
-    private void ApplyPlayerGarden(GardenSnapshot snapshot)
-    {
-        if (gardenManager == null || snapshot == null || snapshot.plants == null)
-            return;
-
-        gardenManager.ClearRuntimePlantsForPersistence();
-
-        // Plots start with a scene "dead plant" mesh; remove it on any plot we repopulate so we do not stack dead + live visuals.
-        var plotsToRevive = new HashSet<int>();
-        foreach (var sp in snapshot.plants)
-        {
-            if (sp.plotIndex >= 0 && sp.plotIndex < gardenManager.PlotCount)
-                plotsToRevive.Add(sp.plotIndex);
-        }
-        foreach (int plotIdx in plotsToRevive)
-        {
-            GardenPlot plot = gardenManager.GetPlot(plotIdx);
-            if (plot != null && plot.HasDeadPlant)
-                plot.RemoveDeadPlant();
-        }
-
-        foreach (var sp in snapshot.plants)
-        {
-            var type = ResolvePlantType(sp.displayName);
-            if (type == null)
-                continue;
-            gardenManager.RestorePlantFromSnapshot(type, sp.plotIndex, new Vector3(sp.localX, sp.localY, sp.localZ));
-        }
     }
 
     private void ApplyNeighbourDecorations(CommunityGardenFile file)
@@ -410,6 +385,7 @@ public class CommunityGardenPersistence : MonoBehaviour
     private GardenSnapshot CaptureSnapshot(GardenManager gm)
     {
         var list = new System.Collections.Generic.List<SavedPlant>();
+        var seen = new HashSet<string>();
         int plotCount = gm.PlotCount;
 
         foreach (var p in gm.Plants)
@@ -428,6 +404,10 @@ public class CommunityGardenPersistence : MonoBehaviour
                 continue;
 
             Vector3 local = plot.transform.InverseTransformPoint(p.worldPosition);
+            string dedupeKey = $"{plotIdx}|{p.type.displayName}|{local.x:F4}|{local.y:F4}|{local.z:F4}";
+            if (!seen.Add(dedupeKey))
+                continue;
+
             list.Add(new SavedPlant
             {
                 displayName = p.type.displayName,

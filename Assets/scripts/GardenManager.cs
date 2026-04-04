@@ -65,6 +65,7 @@ public class GardenManager : MonoBehaviour
         Vector3 world = plot.transform.TransformPoint(localInPlot);
         Plant plant = new Plant(type, world);
         plant.ownerPlotIndex = plotIndex;
+        plant.contributesPassiveIncome = false;
         plant.stage = PlantStage.Mature;
         plant.growthProgress = 1f;
         plant.waterLevel = 1f;
@@ -140,6 +141,7 @@ public class GardenManager : MonoBehaviour
                         p.stage = PlantStage.Mature;
                         p.growthProgress = 1f;
                         p.waterLevel = 1f;
+                        p.contributesPassiveIncome = true;
                     }
                     break;
 
@@ -148,12 +150,20 @@ public class GardenManager : MonoBehaviour
                     break;
 
                 case PlantStage.Mature:
-                    scoreAccumulator += p.type.pointIncome * Time.deltaTime;
-                    p.waterLevel -= p.type.maintenanceRate * Time.deltaTime;
-                    if (p.waterLevel <= 0f)
+                    if (p.contributesPassiveIncome)
                     {
-                        p.stage = PlantStage.Dead;
-                        p.waterLevel = 0f;
+                        scoreAccumulator += p.type.pointIncome * Time.deltaTime;
+                        p.waterLevel -= p.type.maintenanceRate * Time.deltaTime;
+                        if (p.waterLevel <= 0f)
+                        {
+                            p.stage = PlantStage.Dead;
+                            p.waterLevel = 0f;
+                        }
+                    }
+                    else
+                    {
+                        // Loaded layout only: no passive score and no maintenance drain this session.
+                        p.waterLevel = 1f;
                     }
                     break;
 
@@ -458,6 +468,20 @@ public class GardenManager : MonoBehaviour
                 Destroy(p.visualTransform.gameObject);
         }
         plants.Clear();
+    }
+
+    /// <summary>
+    /// Clears plants and score/timer so a new session from the main menu never inherits the previous run.
+    /// Call before re-spawning plants from save (restored plants use <see cref="Plant.contributesPassiveIncome"/> = false).
+    /// </summary>
+    public void ResetSessionForPersistenceLoad()
+    {
+        ClearRuntimePlantsForPersistence();
+        score = 0;
+        scoreAccumulator = 0f;
+        gameTimer = gameDurationSeconds;
+        if (treeController != null)
+            treeController.UpdateTreeScale(0);
     }
 
     private int IndexOfPlot(GardenPlot plot)

@@ -24,6 +24,8 @@ public class Plant
     public Vector3 worldPosition;
     /// <summary>Set when planted on a plot; used for save/load (avoids wrong plot from distance checks).</summary>
     public int ownerPlotIndex = -1;
+    /// <summary>False for plants rebuilt from save: they stay mature visually but do not passively earn score until the player plants again (avoids "free" income on load).</summary>
+    public bool contributesPassiveIncome = true;
     public Transform visualTransform;
     public Vector3 initialModelScale; // Stores the original scale of the model (for growth animation)
     public bool usesModel; // True if using a model prefab, false if using cube system
