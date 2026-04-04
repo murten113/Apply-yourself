@@ -68,6 +68,7 @@ public class PauseMenuController : MonoBehaviour
     /// <summary>Hook to Quit / Main menu button.</summary>
     public void QuitToMainMenu()
     {
+        CommunityGardenPersistence.SaveNow();
         SetPaused(false);
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
@@ -76,6 +77,7 @@ public class PauseMenuController : MonoBehaviour
     /// <summary>Hook to Quit game button.</summary>
     public void QuitGame()
     {
+        CommunityGardenPersistence.SaveNow();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

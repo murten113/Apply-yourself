@@ -43,6 +43,35 @@ public class GardenManager : MonoBehaviour
     public PlantType[] AvailablePlantTypes => availablePlantTypes;
     public float GameDuration => gameDurationSeconds;
     public IReadOnlyList<Plant> Plants => plants;
+    public int PlotCount => plots != null ? plots.Length : 0;
+    public GardenPlot GetPlot(int index)
+    {
+        if (plots == null || index < 0 || index >= plots.Length)
+            return null;
+        return plots[index];
+    }
+
+    /// <summary>
+    /// Loads one plant from save data (mature). <paramref name="localInPlot"/> is in <see cref="GardenPlot.transform"/> local space.
+    /// </summary>
+    public void RestorePlantFromSnapshot(PlantType type, int plotIndex, Vector3 localInPlot)
+    {
+        if (type == null || plots == null || plotIndex < 0 || plotIndex >= plots.Length)
+            return;
+        GardenPlot plot = plots[plotIndex];
+        if (plot == null)
+            return;
+
+        Vector3 world = plot.transform.TransformPoint(localInPlot);
+        Plant plant = new Plant(type, world);
+        plant.ownerPlotIndex = plotIndex;
+        plant.stage = PlantStage.Mature;
+        plant.growthProgress = 1f;
+        plant.waterLevel = 1f;
+        CreatePlantVisual(plant, plot);
+        UpdatePlantVisual(plant);
+        plants.Add(plant);
+    }
 
     private void Start()
     {
@@ -369,6 +398,7 @@ public class GardenManager : MonoBehaviour
         plantPosition.y += 0.1f; // Adjust this value based on your needs
 
         Plant plant = new Plant(plantType, plantPosition);
+        plant.ownerPlotIndex = IndexOfPlot(plot);
         CreatePlantVisual(plant, plot);
         plants.Add(plant);
         return true;
@@ -409,10 +439,37 @@ public class GardenManager : MonoBehaviour
         plantPosition.y += 0.1f; // Slightly above surface
 
         Plant plant = new Plant(plantType, plantPosition);
+        plant.ownerPlotIndex = IndexOfPlot(plot);
         CreatePlantVisual(plant, plot);
 
         plants.Add(plant);
         return true;
+    }
+
+    /// <summary>
+    /// Removes all runtime plants (destroys visuals, clears list). Used before loading a saved garden.
+    /// </summary>
+    public void ClearRuntimePlantsForPersistence()
+    {
+        for (int i = plants.Count - 1; i >= 0; i--)
+        {
+            Plant p = plants[i];
+            if (p?.visualTransform != null)
+                Destroy(p.visualTransform.gameObject);
+        }
+        plants.Clear();
+    }
+
+    private int IndexOfPlot(GardenPlot plot)
+    {
+        if (plots == null || plot == null)
+            return -1;
+        for (int i = 0; i < plots.Length; i++)
+        {
+            if (plots[i] == plot)
+                return i;
+        }
+        return -1;
     }
 
     /// <summary>

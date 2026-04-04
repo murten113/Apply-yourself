@@ -22,6 +22,8 @@ public class Plant
     public float growthProgress;
     public float waterLevel;
     public Vector3 worldPosition;
+    /// <summary>Set when planted on a plot; used for save/load (avoids wrong plot from distance checks).</summary>
+    public int ownerPlotIndex = -1;
     public Transform visualTransform;
     public Vector3 initialModelScale; // Stores the original scale of the model (for growth animation)
     public bool usesModel; // True if using a model prefab, false if using cube system

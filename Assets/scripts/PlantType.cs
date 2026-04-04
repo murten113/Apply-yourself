@@ -34,4 +34,16 @@ public class PlantType : ScriptableObject
     public float maintenanceRate = 0.1f;
     [Tooltip("Max water level. Higher = longer between waterings")]
     public float waterCapacity = 1f;
+
+    /// <summary>Prefab used for neighbour decoration / mature display (same rules as GardenManager mature stage).</summary>
+    public GameObject GetMaturePrefabOrFallback()
+    {
+        if (useSingleModel && plantModelPrefab != null)
+            return plantModelPrefab;
+        if (matureModelPrefab != null)
+            return matureModelPrefab;
+        if (middleStageModelPrefab != null)
+            return middleStageModelPrefab;
+        return sproutModelPrefab;
+    }
 }
