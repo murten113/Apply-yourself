@@ -139,6 +139,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "c4a8e910-9d2f-4b6e-8a1c-3f5e7d9b0c2a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -771,17 +780,6 @@
                 },
                 {
                     "name": "",
-                    "id": "a34ee2ad-6c38-48ff-ac93-2d8eb4d5ed1d",
-                    "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/button8",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "NextSeed",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "a7ea9049-6aae-44df-8c2f-b46d5d7f3a17",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -793,12 +791,45 @@
                 },
                 {
                     "name": "",
-                    "id": "ea4b87bb-ad58-44eb-afc6-4721d2e0036d",
+                    "id": "7f2d125a-30a9-474a-8d50-b875c87fda11",
+                    "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextSeed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5b9f021-0e3a-5c7f-9b2d-4a6e8f0c1d3b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6caf132-1f4b-6d8a-0c3e-5b7f9a1d2e4c",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b38e751-6465-46ba-b50f-1e869bae6d1c",
                     "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/button7",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PrevSeed",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
