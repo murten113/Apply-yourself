@@ -9,6 +9,13 @@ public class MainMenuController : MonoBehaviour
     [Header("Scenes")]
     [Tooltip("First gameplay scene name — must match File > Build Settings (e.g. Level Layout).")]
     [SerializeField] private string gameSceneName = "Level Layout";
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject creditMenu;
+
+    private void Start()
+    {
+        BackMenu();
+    }
 
     public void PlayGame()
     {
@@ -29,5 +36,17 @@ public class MainMenuController : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void CreditMenu()
+    {
+        mainMenu.SetActive(false);
+        creditMenu.SetActive(true);
+    }
+
+    public void BackMenu()
+    {
+        mainMenu.SetActive(true);
+        creditMenu.SetActive(false);
     }
 }
