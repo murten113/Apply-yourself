@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Klaproos
   flowerColor: {r: 1, g: 1, b: 1, a: 0}
+  seedPacketTexture: {fileID: 2800000, guid: ecd2bee42e9d7584ca775657c5001ae6, type: 3}
   sproutModelPrefab: {fileID: 8936218548163971636, guid: 768a73e237efe674384fb26da0cc3d7d, type: 3}
   middleStageModelPrefab: {fileID: 6988817725214235046, guid: c65345d8bc1f6be44b230682ebd6325f, type: 3}
   matureModelPrefab: {fileID: 8873127326832272377, guid: 21e5fee408fa83347b13b17f2c56fa65, type: 3}

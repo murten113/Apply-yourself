@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Madelief
   flowerColor: {r: 1, g: 1, b: 1, a: 1}
+  seedPacketTexture: {fileID: 2800000, guid: 5e25a4b021ed1044887f2a9a106563c0, type: 3}
   sproutModelPrefab: {fileID: 8936218548163971636, guid: 768a73e237efe674384fb26da0cc3d7d, type: 3}
   middleStageModelPrefab: {fileID: 6988817725214235046, guid: c65345d8bc1f6be44b230682ebd6325f, type: 3}
   matureModelPrefab: {fileID: 9123628414750171849, guid: 973ab729e9037794baac4e874f557ea7, type: 3}
