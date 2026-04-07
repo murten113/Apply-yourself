@@ -11,6 +11,10 @@ public class PlantType : ScriptableObject
     [Header("Identity")]
     public string displayName = "Flower";
     public Color flowerColor = Color.yellow;
+
+    [Header("Seed packet (held tool)")]
+    [Tooltip("Applied to the seed packet mesh when this type is selected. Uses URP Lit _BaseMap or Built-in _MainTex on the packet renderers.")]
+    public Texture2D seedPacketTexture;
     
     [Header("Visual Models (Optional)")]
     [Tooltip("Optional: Assign 3D model/prefabs for different plant stages. If not assigned, uses colored cube system.")]

@@ -28,24 +28,9 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private Transform toolAttachPoint;
     [Tooltip("Prefab or scene object for the shovel. Prefabs are instantiated once; scene objects are reparented here.")]
     [SerializeField] private GameObject shovelToolModel;
+    [Tooltip("Prefab or scene object for the seed packet mesh. Per-flower artwork: assign Seed Packet Texture on each Plant Type.")]
     [SerializeField] private GameObject seedPacketToolModel;
     [SerializeField] private GameObject wateringCanToolModel;
-
-    [Header("Seed packet label")]
-    [Tooltip("When off, hides the 3D label on the seed packet (TMP or legacy TextMesh).")]
-    [SerializeField] private bool showSeedPacketLabel = true;
-    [Tooltip("Optional: TextMeshPro (3D) on the seed packet. If unassigned, we try GetComponentInChildren<TextMeshPro>. Import TMP Essentials (Window > Text Mesh Pro) if fonts are missing.")]
-    [SerializeField] private TMP_Text seedPacketLabelTmp;
-    [Tooltip("Fallback if you still use legacy TextMesh on the packet (optional).")]
-    [SerializeField] private TextMesh seedPacketLabelLegacyMesh;
-    [Tooltip("If not empty, this text is always shown on the packet instead of the selected plant's display name.")]
-    [SerializeField] private string seedPacketLabelOverride = "";
-    [Tooltip("If no TMP/TextMesh exists on the packet, create a 3D TextMeshPro label.")]
-    [SerializeField] private bool createSeedPacketLabelIfMissing = false;
-    [Tooltip("Local offset when a label is auto-created (relative to packet root).")]
-    [SerializeField] private Vector3 seedPacketLabelLocalOffset = new Vector3(0f, 0.02f, 0.02f);
-    [Tooltip("Font size for auto-created TextMeshPro (world-space TMP).")]
-    [SerializeField] private float seedPacketLabelFontSize = 3f;
 
     [Header("AOE Settings")]
     [Tooltip("Radius for watering can (waters all plants in area)")]
@@ -92,7 +77,7 @@ public class PlayerTools : MonoBehaviour
     private GameObject seedPacketVisualInstance;
     private GameObject wateringCanVisualInstance;
     private ToolType? lastAppliedToolVisual;
-    private string lastSeedPacketLabelApplied = "";
+    private Texture2D lastAppliedSeedPacketTexture;
 
     public ToolType CurrentTool => currentTool;
     public PlantType SelectedSeedType => selectedSeedType;
@@ -117,19 +102,13 @@ public class PlayerTools : MonoBehaviour
         selectSeedPrevAction?.action?.Disable();
     }
 
-    private void OnValidate()
-    {
-        ApplySeedPacketLabelVisibility();
-    }
-
     private void Start()
     {
         SyncSeedSelectionFromManager();
         CreateCircleIndicator();
         InitializeToolVisualInstances();
-        EnsureSeedPacketLabel();
         ApplyToolVisuals();
-        RefreshSeedPacketLabel();
+        ApplySeedPacketFaceTexture();
     }
 
     private void CreateCircleIndicator()
@@ -274,14 +253,16 @@ public class PlayerTools : MonoBehaviour
         if (!lastAppliedToolVisual.HasValue || lastAppliedToolVisual.Value != currentTool)
             ApplyToolVisuals();
 
-        RefreshSeedPacketLabel();
+        ApplySeedPacketFaceTexture();
     }
 
     private void InitializeToolVisualInstances()
     {
         Transform parent = toolAttachPoint != null ? toolAttachPoint : transform;
         shovelVisualInstance = ResolveToolModel(shovelToolModel, parent);
+
         seedPacketVisualInstance = ResolveToolModel(seedPacketToolModel, parent);
+
         wateringCanVisualInstance = ResolveToolModel(wateringCanToolModel, parent);
 
         if (shovelVisualInstance != null && (shovelVisualInstance == seedPacketVisualInstance || shovelVisualInstance == wateringCanVisualInstance) ||
@@ -291,67 +272,52 @@ public class PlayerTools : MonoBehaviour
                 "PlayerTools: Each tool model should be a different GameObject. Duplicate references will look wrong when switching tools.",
                 this);
         }
+
+        DisableSeedPacketTextLabels(seedPacketVisualInstance);
     }
 
-    private void EnsureSeedPacketLabel()
+    /// <summary>Hides any TMP/TextMesh labels on the packet; artwork comes from PlantType.seedPacketTexture.</summary>
+    private static void DisableSeedPacketTextLabels(GameObject seedPacketRoot)
+    {
+        if (seedPacketRoot == null) return;
+        foreach (var tmp in seedPacketRoot.GetComponentsInChildren<TMP_Text>(true))
+            tmp.gameObject.SetActive(false);
+        foreach (var legacy in seedPacketRoot.GetComponentsInChildren<TextMesh>(true))
+            legacy.gameObject.SetActive(false);
+    }
+
+    /// <summary>Sets _BaseMap (URP) or _MainTex (Built-in) per renderer from the selected plant type.</summary>
+    private void ApplySeedPacketFaceTexture()
     {
         if (seedPacketVisualInstance == null) return;
 
-        if (seedPacketLabelTmp == null)
-            seedPacketLabelTmp = seedPacketVisualInstance.GetComponentInChildren<TextMeshPro>(true);
+        Texture2D tex = selectedSeedType != null ? selectedSeedType.seedPacketTexture : null;
+        if (tex == lastAppliedSeedPacketTexture)
+            return;
+        lastAppliedSeedPacketTexture = tex;
 
-        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null)
-            seedPacketLabelLegacyMesh = seedPacketVisualInstance.GetComponentInChildren<TextMesh>(true);
-
-        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null && createSeedPacketLabelIfMissing)
+        var renderers = seedPacketVisualInstance.GetComponentsInChildren<Renderer>(true);
+        if (tex == null)
         {
-            GameObject labelGo = new GameObject("SeedPacketLabelTMP");
-            labelGo.transform.SetParent(seedPacketVisualInstance.transform, false);
-            labelGo.transform.localPosition = seedPacketLabelLocalOffset;
-            labelGo.transform.localRotation = Quaternion.identity;
-            TextMeshPro tmp = labelGo.AddComponent<TextMeshPro>();
-            tmp.text = "";
-            tmp.fontSize = seedPacketLabelFontSize;
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.color = Color.black;
-            tmp.textWrappingMode = TextWrappingModes.NoWrap;
-            tmp.overflowMode = TextOverflowModes.Overflow;
-            seedPacketLabelTmp = tmp;
+            foreach (var r in renderers)
+                r.SetPropertyBlock(null);
+            return;
         }
 
-        ApplySeedPacketLabelVisibility();
-    }
-
-    private void ApplySeedPacketLabelVisibility()
-    {
-        if (seedPacketLabelTmp != null)
-            seedPacketLabelTmp.gameObject.SetActive(showSeedPacketLabel);
-        if (seedPacketLabelLegacyMesh != null)
-            seedPacketLabelLegacyMesh.gameObject.SetActive(showSeedPacketLabel);
-    }
-
-    private void RefreshSeedPacketLabel()
-    {
-        if (seedPacketLabelTmp == null && seedPacketLabelLegacyMesh == null) return;
-
-        string text = GetSeedPacketLabelText();
-        if (text != lastSeedPacketLabelApplied)
+        foreach (var r in renderers)
         {
-            lastSeedPacketLabelApplied = text;
-            if (seedPacketLabelTmp != null)
-                seedPacketLabelTmp.text = text;
-            else if (seedPacketLabelLegacyMesh != null)
-                seedPacketLabelLegacyMesh.text = text;
+            var mpb = new MaterialPropertyBlock();
+            r.GetPropertyBlock(mpb);
+            Material mat = r.sharedMaterial;
+            if (mat != null)
+            {
+                if (mat.HasProperty("_BaseMap"))
+                    mpb.SetTexture("_BaseMap", tex);
+                else if (mat.HasProperty("_MainTex"))
+                    mpb.SetTexture("_MainTex", tex);
+            }
+            r.SetPropertyBlock(mpb);
         }
-
-        ApplySeedPacketLabelVisibility();
-    }
-
-    private string GetSeedPacketLabelText()
-    {
-        if (!string.IsNullOrEmpty(seedPacketLabelOverride))
-            return seedPacketLabelOverride;
-        return selectedSeedType != null ? selectedSeedType.displayName : "";
     }
 
     /// <summary>
