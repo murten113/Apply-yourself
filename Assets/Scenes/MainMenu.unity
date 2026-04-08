@@ -16205,6 +16205,9 @@ MonoBehaviour:
   interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   menuItems:
   - {fileID: 1625643447}
+  - {fileID: 1833911209}
+  - {fileID: 2048130837}
+  requireActiveForInput: {fileID: 0}
   stickDeadzone: 0.55
   stickRepeatCooldown: 0.22
   invokeOnSubmit: 1

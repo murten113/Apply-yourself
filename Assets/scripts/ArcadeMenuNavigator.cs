@@ -21,6 +21,11 @@ public class ArcadeMenuNavigator : MonoBehaviour
 
     [SerializeField] private Button[] menuItems;
 
+    [Header("When input applies")]
+    [Tooltip("Look + Interact only run while this GameObject is active in the hierarchy (e.g. your menu panel root). " +
+             "Assign this if this component lives on a persistent object; otherwise closing the menu with SetActive(false) on the panel still leaves this script running and Interact can fire menu buttons.")]
+    [SerializeField] private GameObject requireActiveForInput;
+
     [Header("Stick / repeat")]
     [SerializeField] private float stickDeadzone = 0.55f;
     [SerializeField] private float stickRepeatCooldown = 0.22f;
@@ -50,6 +55,9 @@ public class ArcadeMenuNavigator : MonoBehaviour
     private void Update()
     {
         if (menuItems == null || menuItems.Length == 0)
+            return;
+
+        if (!ShouldHandleMenuInput())
             return;
 
         var look = lookBindingAction?.action;
@@ -85,6 +93,18 @@ public class ArcadeMenuNavigator : MonoBehaviour
     {
         var a = interactAction?.action;
         return a != null && a.WasPressedThisFrame();
+    }
+
+    /// <summary>
+    /// When <see cref="requireActiveForInput"/> is set, navigation and submit only run if that object is active
+    /// (menu open). When unset, any enabled GameObject with this script processes input — use only if the
+    /// component is on the same object that is disabled when the menu closes.
+    /// </summary>
+    private bool ShouldHandleMenuInput()
+    {
+        if (requireActiveForInput == null)
+            return true;
+        return requireActiveForInput.activeInHierarchy;
     }
 
     private void MoveSelection(int delta)
